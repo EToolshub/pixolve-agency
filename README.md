@@ -49,6 +49,19 @@ quieres automatizar la captura de pagos (PayPal Checkout SDK con
 verificación server-side, o Binance Pay API), se puede añadir sobre esta
 misma base sin rehacer el sitio.
 
+## Base de datos de suscriptores
+
+El footer incluye un formulario de "Recibe ofertas, beneficios y lanzamientos"
+que guarda el correo en una base de datos de Supabase (proyecto
+`pixolve-agency`, tabla `subscribers`). La URL y la clave pública viven en
+[`src/lib/supabase.ts`](src/lib/supabase.ts) — no son secretas, están
+protegidas por Row Level Security: cualquiera puede suscribirse, pero nadie
+puede leer ni exportar la lista desde el navegador.
+
+Para ver o exportar los correos, entra al
+[panel de Supabase](https://supabase.com/dashboard/project/gqjptrcvkbzotzserdop/editor)
+→ tabla `subscribers`.
+
 ## Desarrollo local
 
 ```bash

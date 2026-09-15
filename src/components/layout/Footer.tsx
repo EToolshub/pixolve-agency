@@ -8,12 +8,27 @@ import {
   InstagramIcon,
   LinkedinIcon,
 } from "@/components/icons/SocialIcons";
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-white/10 bg-slate-950 text-slate-300">
+      <div className="border-b border-white/10">
+        <Container className="flex flex-col items-center justify-between gap-6 py-10 text-center sm:flex-row sm:text-left">
+          <div>
+            <h2 className="text-lg font-bold text-white">
+              Recibe ofertas, beneficios y lanzamientos
+            </h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Súmate a nuestra lista y sé de los primeros en enterarte.
+            </p>
+          </div>
+          <NewsletterForm source="footer" className="w-full sm:w-auto" />
+        </Container>
+      </div>
+
       <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center gap-2">
