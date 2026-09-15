@@ -29,7 +29,12 @@ export const siteConfig = {
     facebook: "https://facebook.com/pixolveagency", // TODO
     linkedin: "https://linkedin.com/company/pixolveagency", // TODO
     tiktok: "https://tiktok.com/@pixolveagency", // TODO
+    behance: "https://www.behance.net/GaboDesign1",
   },
+
+  googleBusinessUrl: "https://share.google/6R1l1Bh6T5S8ffS4K",
+
+  googleAnalyticsId: "G-6BLMSG6GXM",
 
   // Métodos de pago manuales (sin necesidad de claves secretas de API).
   payments: {
@@ -53,6 +58,7 @@ export const siteConfig = {
 export const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/servicios", label: "Servicios" },
+  { href: "/portafolio", label: "Portafolio" },
   { href: "/proceso", label: "Cómo trabajamos" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/preguntas-frecuentes", label: "FAQ" },

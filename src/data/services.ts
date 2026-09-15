@@ -24,7 +24,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-esencial",
         name: "Esencial",
-        price: 25,
+        price: 50,
         billing: "unico",
         tagline: "Ideal para marcas que están empezando.",
         features: [
@@ -33,35 +33,35 @@ export const services: Service[] = [
           "2 rondas de revisión",
           "Archivos en formatos editables y de impresión",
         ],
-        deliveryTime: "5 días hábiles",
+        deliveryTime: "2 días hábiles",
       },
       {
         id: "diseno-grafico-profesional",
         name: "Profesional",
-        price: 75,
+        price: 100,
         billing: "unico",
         tagline: "Identidad completa lista para todos tus canales.",
         highlighted: true,
         features: [
           "Identidad de marca completa (logo, paleta, tipografía)",
           "Manual de marca digital",
-          "10 plantillas para redes sociales",
-          "4 rondas de revisión",
+          "5 plantillas para redes sociales",
+          "3 rondas de revisión",
           "Papelería digital (tarjeta, firma de correo)",
         ],
-        deliveryTime: "10 días hábiles",
+        deliveryTime: "5 días hábiles",
       },
       {
         id: "diseno-grafico-empresarial",
         name: "Empresarial",
-        price: 275,
+        price: 300,
         billing: "unico",
         tagline: "Sistema de marca a escala, con gerente dedicado.",
         features: [
           "Sistema de marca extendido (múltiples líneas)",
           "Soporte de naming y tono de voz",
           "Guidelines extensos para equipos internos",
-          "Revisiones ilimitadas durante 30 días",
+          "6 rondas de revisión",
           "Gerente de proyecto dedicado",
         ],
         deliveryTime: "A definir según alcance",
@@ -107,7 +107,7 @@ export const services: Service[] = [
         billing: "mensual",
         tagline: "Presencia constante y profesional desde el primer mes.",
         features: [
-          "Hasta 2 redes sociales",
+          "1 red social",
           "12 publicaciones al mes",
           "Diseño de piezas incluido",
           "Calendario de contenido mensual",
@@ -122,8 +122,8 @@ export const services: Service[] = [
         tagline: "Para marcas que buscan crecer de forma activa.",
         highlighted: true,
         features: [
-          "Hasta 3 redes sociales",
-          "20 publicaciones + 4 reels al mes",
+          "2 redes sociales",
+          "20 publicaciones + 2 reels al mes",
           "Community management diario",
           "Gestión de pauta publicitaria (presupuesto de ads aparte)",
           "Reporte quincenal con recomendaciones",
@@ -136,8 +136,8 @@ export const services: Service[] = [
         billing: "mensual",
         tagline: "Operación multicanal para grandes empresas.",
         features: [
-          "Redes sociales ilimitadas",
-          "Contenido diario y producción audiovisual",
+          "3 redes sociales",
+          "24 publicaciones + 4 reels al mes",
           "Estrategia multicanal y gestión de crisis",
           "Reportes semanales",
           "Estratega de cuenta dedicado",
@@ -324,7 +324,7 @@ export const services: Service[] = [
       {
         id: "hosting-basico",
         name: "Básico",
-        price: 5,
+        price: 15,
         billing: "mensual",
         tagline: "Para sitios informativos y de bajo tráfico.",
         features: [
@@ -336,7 +336,7 @@ export const services: Service[] = [
       {
         id: "hosting-pro",
         name: "Pro",
-        price: 12.5,
+        price: 35,
         billing: "mensual",
         tagline: "Optimizado para tiendas en línea.",
         highlighted: true,
@@ -350,7 +350,7 @@ export const services: Service[] = [
       {
         id: "hosting-enterprise",
         name: "Enterprise",
-        price: 30,
+        price: 60,
         billing: "mensual",
         tagline: "Infraestructura dedicada de alta disponibilidad.",
         features: [
