@@ -21,6 +21,10 @@ export type Service = {
   bullets: string[];
   packages: ServicePackage[];
   faqs: { question: string; answer: string }[];
+  seo: {
+    title: string;
+    description: string;
+  };
 };
 
 export type CartItem = {
@@ -43,3 +47,16 @@ export type CustomerInfo = {
 };
 
 export type PaymentMethod = "paypal" | "usdt";
+
+export type BriefQuestion = {
+  id: string;
+  label: string;
+  type: "text" | "textarea" | "select" | "checkboxes";
+  options?: string[];
+  placeholder?: string;
+  required?: boolean;
+};
+
+export type BriefAnswer = string | string[];
+
+export type ServiceBriefAnswers = Record<string, BriefAnswer>;

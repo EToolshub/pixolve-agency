@@ -29,15 +29,15 @@ export function OrderConfirmationView() {
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
         <CheckCircle2 className="h-8 w-8 text-emerald-600" />
       </div>
-      <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900">
+      <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-heading">
         ¡Gracias por tu pedido!
       </h1>
       {orderId && (
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-body">
           Número de pedido: <span className="font-semibold">{orderId}</span>
         </p>
       )}
-      <p className="mt-4 text-slate-600">
+      <p className="mt-4 text-body">
         Enviamos el resumen de tu pedido por WhatsApp. Si no se abrió
         automáticamente, escríbenos con tu comprobante de pago para
         confirmar tu proyecto.
@@ -54,9 +54,9 @@ export function OrderConfirmationView() {
         </Button>
       </div>
 
-      <div className="mt-12 rounded-2xl border border-slate-200 p-6 text-left">
-        <h2 className="font-bold text-slate-900">¿Qué sigue ahora?</h2>
-        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-slate-600">
+      <div className="mt-12 rounded-2xl border border-default p-6 text-left">
+        <h2 className="font-bold text-heading">¿Qué sigue ahora?</h2>
+        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-body">
           <li>Nuestro equipo confirmará tu pago en menos de 24 horas hábiles.</li>
           <li>Te contactaremos por WhatsApp o correo para agendar la reunión de arranque.</li>
           <li>Comenzamos la producción de tu proyecto según el tiempo de entrega de tu paquete.</li>
@@ -64,15 +64,15 @@ export function OrderConfirmationView() {
       </div>
 
       {order && order.items.length > 0 && (
-        <div className="mt-6 rounded-2xl bg-slate-50 p-6 text-left">
-          <h2 className="font-bold text-slate-900">Resumen de tu compra</h2>
+        <div className="mt-6 rounded-2xl bg-alt p-6 text-left">
+          <h2 className="font-bold text-heading">Resumen de tu compra</h2>
           <ul className="mt-4 space-y-2">
             {order.items.map((item) => (
               <li key={item.cartItemId} className="flex justify-between text-sm">
-                <span className="text-slate-600">
+                <span className="text-body">
                   {item.packageName} ({item.serviceName})
                 </span>
-                <span className="font-medium text-slate-900">
+                <span className="font-medium text-heading">
                   {formatCurrency(item.price)}
                   {item.billing === "mensual" ? "/mes" : ""}
                 </span>

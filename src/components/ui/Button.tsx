@@ -12,9 +12,9 @@ const variants: Record<Variant, string> = {
   primary:
     "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5 hover:from-blue-500 hover:to-blue-600 active:translate-y-0 active:shadow-md",
   secondary:
-    "bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 hover:-translate-y-0.5 active:translate-y-0",
+    "bg-card text-blue-600 border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:-translate-y-0.5 active:translate-y-0",
   ghost:
-    "bg-transparent text-slate-700 hover:bg-slate-100 hover:-translate-y-0.5 active:translate-y-0",
+    "bg-transparent text-body-strong hover:bg-alt-2 hover:-translate-y-0.5 active:translate-y-0",
   whatsapp:
     "bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0",
   outlineLight:

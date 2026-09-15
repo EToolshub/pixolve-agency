@@ -79,6 +79,11 @@ export const services: Service[] = [
           "Sí, en todos los paquetes recibes los archivos fuente (AI/Figma) además de los formatos listos para usar (PNG, SVG, PDF).",
       },
     ],
+    seo: {
+      title: "Diseño Gráfico Profesional | Agencia de Branding",
+      description:
+        "Agencia de diseño gráfico y branding: logotipos, identidad de marca y piezas gráficas para pymes y empresas. Precios claros, entrega rápida y pago con PayPal o USDT.",
+    },
   },
   {
     slug: "redes-sociales",
@@ -152,6 +157,11 @@ export const services: Service[] = [
           "Sí, puedes subir o bajar de plan en cualquier momento; los cambios aplican desde el siguiente ciclo de facturación.",
       },
     ],
+    seo: {
+      title: "Manejo de Redes Sociales para Empresas y Pymes",
+      description:
+        "Gestión profesional de redes sociales: estrategia, contenido, diseño y community management. Planes desde pymes hasta grandes empresas con reportes de resultados.",
+    },
   },
   {
     slug: "diseno-ui-ux",
@@ -220,6 +230,11 @@ export const services: Service[] = [
           "Sí. Entregamos especificaciones claras, componentes documentados y acompañamos el handoff técnico para que tu equipo (o el nuestro) implemente el diseño sin fricción.",
       },
     ],
+    seo: {
+      title: "Diseño UI/UX Profesional | Agencia de Diseño de Producto",
+      description:
+        "Diseño UI/UX centrado en el usuario: research, wireframes, prototipos interactivos y sistemas de diseño para apps y plataformas web. Cotiza tu proyecto en minutos.",
+    },
   },
   {
     slug: "paginas-web",
@@ -286,6 +301,11 @@ export const services: Service[] = [
           "El desarrollo del sitio no incluye hosting; lo ofrecemos como servicio independiente (ver 'Hosting y Mantenimiento') para que elijas el nivel que necesitas.",
       },
     ],
+    seo: {
+      title: "Creación de Páginas Web y Tiendas Online",
+      description:
+        "Diseño y desarrollo de páginas web y tiendas online rápidas, seguras y optimizadas para SEO. Desde sitios informativos hasta e-commerce a medida con pasarelas de pago.",
+    },
   },
   {
     slug: "hosting",
@@ -348,6 +368,11 @@ export const services: Service[] = [
           "Sí, hacemos la migración sin costo adicional en los planes Pro y Enterprise; para el plan Básico tiene un costo simbólico único.",
       },
     ],
+    seo: {
+      title: "Hosting Web y Mantenimiento para tu Sitio o Tienda",
+      description:
+        "Alojamiento web seguro y confiable con SSL, respaldos automáticos, monitoreo 24/7 y soporte técnico. Planes desde sitios informativos hasta e-commerce de alto tráfico.",
+    },
   },
 ];
 

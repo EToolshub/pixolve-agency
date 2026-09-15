@@ -1,4 +1,9 @@
-import type { CartItem, CustomerInfo, PaymentMethod } from "@/lib/types";
+import type {
+  CartItem,
+  CustomerInfo,
+  PaymentMethod,
+  ServiceBriefAnswers,
+} from "@/lib/types";
 
 const STORAGE_KEY = "pixolve-pending-order";
 
@@ -9,6 +14,7 @@ export type PendingOrder = {
   totalUnico: number;
   totalMensual: number;
   paymentMethod?: PaymentMethod;
+  briefs?: Record<string, ServiceBriefAnswers>;
 };
 
 export function savePendingOrder(order: PendingOrder) {

@@ -25,7 +25,7 @@ export const siteConfig = {
   location: "Atención 100% remota para clientes en toda Latinoamérica y EE. UU.",
 
   social: {
-    instagram: "https://instagram.com/pixolveagency", // TODO
+    instagram: "https://instagram.com/pixolve.agency",
     facebook: "https://facebook.com/pixolveagency", // TODO
     linkedin: "https://linkedin.com/company/pixolveagency", // TODO
     tiktok: "https://tiktok.com/@pixolveagency", // TODO

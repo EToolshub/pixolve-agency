@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-500: #3b82f6;
@@ -13,11 +10,58 @@
 
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #128c7e;
+
+  /* Tokens semánticos de tema (claro por defecto) */
+  --surface-page: #ffffff;
+  --surface-card: #ffffff;
+  --surface-alt: #f8fafc; /* slate-50 */
+  --surface-alt-2: #f1f5f9; /* slate-100 */
+  --surface-header: rgb(255 255 255 / 0.85);
+
+  --text-heading: #0f172a; /* slate-900 */
+  --text-body: #475569; /* slate-600 */
+  --text-body-strong: #334155; /* slate-700 */
+  --text-muted: #64748b; /* slate-500 */
+  --text-subtle: #94a3b8; /* slate-400 */
+
+  --border-default: #e2e8f0; /* slate-200 */
+  --border-default-80: rgb(226 232 240 / 0.8);
+  --border-input: #cbd5e1; /* slate-300 */
+  --border-subtle: #f1f5f9; /* slate-100 */
+
+  --badge-blue-bg: #eff6ff; /* blue-50 */
+  --badge-blue-text: #1d4ed8; /* blue-700 */
+
+  --grid-line: rgba(15, 23, 42, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-page: #020617; /* slate-950 */
+    --surface-card: #0f172a; /* slate-900 */
+    --surface-alt: #0f172a; /* slate-900 */
+    --surface-alt-2: #1e293b; /* slate-800 */
+    --surface-header: rgb(2 6 23 / 0.85);
+
+    --text-heading: #f8fafc; /* slate-50 */
+    --text-body: #94a3b8; /* slate-400 */
+    --text-body-strong: #cbd5e1; /* slate-300 */
+    --text-muted: #94a3b8; /* slate-400 */
+    --text-subtle: #64748b; /* slate-500 */
+
+    --border-default: #1e293b; /* slate-800 */
+    --border-default-80: rgb(30 41 59 / 0.8);
+    --border-input: #334155; /* slate-700 */
+    --border-subtle: #1e293b; /* slate-800 */
+
+    --badge-blue-bg: rgb(37 99 235 / 0.12);
+    --badge-blue-text: #93c5fd; /* blue-300 */
+
+    --grid-line: rgba(148, 163, 184, 0.08);
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-jakarta);
 
   --color-brand-50: var(--color-brand-50);
@@ -57,13 +101,70 @@
   }
 }
 
+/* Utilidades semánticas de tema: cambian solas entre claro/oscuro según el
+   dispositivo, sin necesidad de escribir "dark:" en cada componente. */
+@utility bg-surface {
+  background-color: var(--surface-page);
+}
+@utility bg-card {
+  background-color: var(--surface-card);
+}
+@utility bg-alt {
+  background-color: var(--surface-alt);
+}
+@utility bg-alt-2 {
+  background-color: var(--surface-alt-2);
+}
+@utility bg-header {
+  background-color: var(--surface-header);
+}
+@utility bg-badge-blue {
+  background-color: var(--badge-blue-bg);
+}
+@utility text-heading {
+  color: var(--text-heading);
+}
+@utility text-body {
+  color: var(--text-body);
+}
+@utility text-body-strong {
+  color: var(--text-body-strong);
+}
+@utility text-muted {
+  color: var(--text-muted);
+}
+@utility text-subtle {
+  color: var(--text-subtle);
+}
+@utility text-badge-blue {
+  color: var(--badge-blue-text);
+}
+@utility border-default {
+  border-color: var(--border-default);
+}
+@utility border-default-80 {
+  border-color: var(--border-default-80);
+}
+@utility border-input {
+  border-color: var(--border-input);
+}
+@utility border-subtle {
+  border-color: var(--border-subtle);
+}
+@utility ring-default {
+  --tw-ring-color: var(--border-default);
+}
+@utility ring-page {
+  --tw-ring-color: var(--surface-page);
+}
+
 * {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--surface-page);
+  color: var(--text-heading);
   font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -77,11 +178,7 @@ body {
 }
 
 .bg-grid {
-  background-image: linear-gradient(
-      to right,
-      rgba(15, 23, 42, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
 }

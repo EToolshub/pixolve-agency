@@ -32,7 +32,7 @@ const reasons = [
 
 export function WhyUs() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-alt py-24">
       <Container>
         <SectionHeading
           eyebrow="Por qué elegirnos"
@@ -43,12 +43,12 @@ export function WhyUs() {
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason, index) => (
             <FadeIn key={reason.title} delay={index * 0.08}>
-              <div className="h-full rounded-2xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
+              <div className="h-full rounded-2xl bg-card p-7 shadow-sm ring-1 ring-default">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white">
                   <reason.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-5 font-bold text-slate-900">{reason.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                <h3 className="mt-5 font-bold text-heading">{reason.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-body">
                   {reason.description}
                 </p>
               </div>

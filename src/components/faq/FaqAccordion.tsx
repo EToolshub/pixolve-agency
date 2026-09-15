@@ -18,7 +18,7 @@ export function FaqAccordion({
         return (
           <div
             key={item.question}
-            className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+            className="overflow-hidden rounded-xl border border-default bg-card"
           >
             <button
               type="button"
@@ -26,7 +26,7 @@ export function FaqAccordion({
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
               aria-expanded={isOpen}
             >
-              <span className="font-semibold text-slate-900">
+              <span className="font-semibold text-heading">
                 {item.question}
               </span>
               <ChevronDown
@@ -43,7 +43,7 @@ export function FaqAccordion({
               )}
             >
               <div className="overflow-hidden">
-                <p className="px-5 pb-5 text-sm leading-relaxed text-slate-600">
+                <p className="px-5 pb-5 text-sm leading-relaxed text-body">
                   {item.answer}
                 </p>
               </div>

@@ -15,19 +15,19 @@ export function ServiceCard({ service }: { service: Service }) {
   return (
     <Link
       href={`/servicios/${service.slug}`}
-      className="group relative flex flex-col rounded-2xl border border-slate-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-600/10"
+      className="group relative flex flex-col rounded-2xl border border-default bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-600/10"
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-500/10 dark:text-blue-400">
         {Icon && <Icon className="h-6 w-6" />}
       </div>
-      <h3 className="mt-5 text-lg font-bold text-slate-900">{service.name}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+      <h3 className="mt-5 text-lg font-bold text-heading">{service.name}</h3>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-body">
         {service.shortDescription}
       </p>
-      <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-        <span className="text-sm text-slate-500">
+      <div className="mt-6 flex items-center justify-between border-t border-subtle pt-4">
+        <span className="text-sm text-muted">
           Desde{" "}
-          <span className="font-bold text-slate-900">
+          <span className="font-bold text-heading">
             {formatCurrency(startingPrice)}
           </span>
           {startingBilling === "mensual" ? "/mes" : ""}
