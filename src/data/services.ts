@@ -24,7 +24,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-esencial",
         name: "Esencial",
-        price: 150,
+        price: 50,
         billing: "unico",
         tagline: "Ideal para marcas que están empezando.",
         features: [
@@ -38,7 +38,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-profesional",
         name: "Profesional",
-        price: 450,
+        price: 150,
         billing: "unico",
         tagline: "Identidad completa lista para todos tus canales.",
         highlighted: true,
@@ -54,7 +54,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-empresarial",
         name: "Empresarial",
-        price: 950,
+        price: 550,
         billing: "unico",
         tagline: "Sistema de marca a escala, con gerente dedicado.",
         features: [
