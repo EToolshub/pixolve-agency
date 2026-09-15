@@ -24,7 +24,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-esencial",
         name: "Esencial",
-        price: 50,
+        price: 25,
         billing: "unico",
         tagline: "Ideal para marcas que están empezando.",
         features: [
@@ -38,7 +38,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-profesional",
         name: "Profesional",
-        price: 150,
+        price: 75,
         billing: "unico",
         tagline: "Identidad completa lista para todos tus canales.",
         highlighted: true,
@@ -54,7 +54,7 @@ export const services: Service[] = [
       {
         id: "diseno-grafico-empresarial",
         name: "Empresarial",
-        price: 550,
+        price: 275,
         billing: "unico",
         tagline: "Sistema de marca a escala, con gerente dedicado.",
         features: [
@@ -98,7 +98,7 @@ export const services: Service[] = [
       {
         id: "redes-starter",
         name: "Starter (Pymes)",
-        price: 300,
+        price: 150,
         billing: "mensual",
         tagline: "Presencia constante y profesional desde el primer mes.",
         features: [
@@ -112,7 +112,7 @@ export const services: Service[] = [
       {
         id: "redes-growth",
         name: "Growth",
-        price: 700,
+        price: 350,
         billing: "mensual",
         tagline: "Para marcas que buscan crecer de forma activa.",
         highlighted: true,
@@ -127,7 +127,7 @@ export const services: Service[] = [
       {
         id: "redes-enterprise",
         name: "Enterprise",
-        price: 1500,
+        price: 750,
         billing: "mensual",
         tagline: "Operación multicanal para grandes empresas.",
         features: [
@@ -170,7 +170,7 @@ export const services: Service[] = [
       {
         id: "uiux-mvp",
         name: "Landing / MVP",
-        price: 500,
+        price: 250,
         billing: "unico",
         tagline: "Valida tu idea con un diseño profesional.",
         features: [
@@ -184,7 +184,7 @@ export const services: Service[] = [
       {
         id: "uiux-producto",
         name: "Producto Digital",
-        price: 1500,
+        price: 750,
         billing: "unico",
         tagline: "App o plataforma completa, de research a UI final.",
         highlighted: true,
@@ -200,7 +200,7 @@ export const services: Service[] = [
       {
         id: "uiux-enterprise",
         name: "Enterprise / Design System",
-        price: 3500,
+        price: 1750,
         billing: "unico",
         tagline: "Design system completo para equipos de producto.",
         features: [
@@ -238,7 +238,7 @@ export const services: Service[] = [
       {
         id: "web-basico",
         name: "Sitio Básico",
-        price: 600,
+        price: 300,
         billing: "unico",
         tagline: "Presencia web profesional en pocas semanas.",
         features: [
@@ -252,7 +252,7 @@ export const services: Service[] = [
       {
         id: "web-ecommerce",
         name: "E-commerce / Avanzado",
-        price: 1500,
+        price: 750,
         billing: "unico",
         tagline: "Tu tienda en línea, lista para vender.",
         highlighted: true,
@@ -267,7 +267,7 @@ export const services: Service[] = [
       {
         id: "web-enterprise",
         name: "Enterprise / A Medida",
-        price: 3000,
+        price: 1500,
         billing: "unico",
         tagline: "Plataformas complejas y de alta escala.",
         features: [
@@ -304,7 +304,7 @@ export const services: Service[] = [
       {
         id: "hosting-basico",
         name: "Básico",
-        price: 10,
+        price: 5,
         billing: "mensual",
         tagline: "Para sitios informativos y de bajo tráfico.",
         features: [
@@ -316,7 +316,7 @@ export const services: Service[] = [
       {
         id: "hosting-pro",
         name: "Pro",
-        price: 25,
+        price: 12.5,
         billing: "mensual",
         tagline: "Optimizado para tiendas en línea.",
         highlighted: true,
@@ -330,7 +330,7 @@ export const services: Service[] = [
       {
         id: "hosting-enterprise",
         name: "Enterprise",
-        price: 60,
+        price: 30,
         billing: "mensual",
         tagline: "Infraestructura dedicada de alta disponibilidad.",
         features: [

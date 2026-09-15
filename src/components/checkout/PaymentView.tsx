@@ -23,7 +23,7 @@ export function PaymentView() {
   const [order, setOrder] = useState<PendingOrder | null>(null);
   const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [confirmed, setConfirmed] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copiedField, setCopiedField] = useState<"binance" | "wallet" | "paypal" | null>(null);
 
   useEffect(() => {
     const pending = getPendingOrder();
@@ -39,12 +39,12 @@ export function PaymentView() {
 
   const totalDue = order.totalUnico + order.totalMensual;
 
-  function handleCopy() {
+  function handleCopy(field: "binance" | "wallet" | "paypal", value: string) {
     navigator.clipboard
-      .writeText(siteConfig.payments.usdt.walletAddress)
+      .writeText(value)
       .then(() => {
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 2000);
+        setCopiedField(field);
+        window.setTimeout(() => setCopiedField(null), 2000);
       })
       .catch(() => {
         // el navegador bloqueó el acceso al portapapeles; el usuario puede copiar manualmente
@@ -153,62 +153,80 @@ export function PaymentView() {
       {method === "paypal" && (
         <div className="mt-6 rounded-2xl border border-slate-200 p-6">
           <h2 className="font-bold text-slate-900">Instrucciones de pago con PayPal</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-slate-600">Correo de PayPal:</p>
+          <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-4">
+            <code className="break-all text-sm text-slate-800">
+              {siteConfig.payments.paypal.email}
+            </code>
+            <button
+              onClick={() => handleCopy("paypal", siteConfig.payments.paypal.email)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm hover:text-blue-600"
+              aria-label="Copiar correo de PayPal"
+            >
+              {copiedField === "paypal" ? (
+                <Check className="h-4 w-4 text-emerald-600" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-slate-600">
             <li>
-              Haz clic en el botón para abrir PayPal con el monto de tu
-              pedido ({formatCurrency(totalDue)}) precargado.
+              Abre PayPal (app o web) y envía{" "}
+              <span className="font-semibold">{formatCurrency(totalDue)}</span> al
+              correo de arriba, eligiendo la opción &quot;Pagar por bienes y
+              servicios&quot;.
             </li>
-            <li>Completa el pago desde tu cuenta de PayPal.</li>
+            <li>Toma una captura de pantalla del comprobante de pago.</li>
             <li>
-              Regresa aquí y presiona &quot;Confirmar pedido&quot; para
-              enviarnos tu comprobante por WhatsApp.
+              Presiona &quot;Confirmar pedido&quot; y adjunta el comprobante
+              en el chat de WhatsApp que se abrirá.
             </li>
           </ol>
-          <Button
-            href={`${siteConfig.payments.paypal.meLink}/${totalDue}`}
-            variant="secondary"
-            className="mt-5"
-          >
-            Pagar {formatCurrency(totalDue)} con PayPal
-          </Button>
-          <p className="mt-3 text-xs text-slate-500">
-            ¿Prefieres pagar manualmente? Envía tu pago a{" "}
-            <span className="font-medium text-slate-700">
-              {siteConfig.payments.paypal.email}
-            </span>
-            .
-          </p>
+          {siteConfig.payments.paypal.meLink && (
+            <Button
+              href={`${siteConfig.payments.paypal.meLink}/${totalDue}`}
+              variant="secondary"
+              className="mt-5"
+            >
+              Pagar {formatCurrency(totalDue)} con PayPal.Me
+            </Button>
+          )}
         </div>
       )}
 
       {method === "usdt" && (
         <div className="mt-6 rounded-2xl border border-slate-200 p-6">
           <h2 className="font-bold text-slate-900">
-            Instrucciones de pago con USDT
+            Instrucciones de pago con USDT (Binance Pay)
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Red: <span className="font-medium">{siteConfig.payments.usdt.network}</span>
-          </p>
+          <p className="mt-2 text-sm text-slate-600">Binance Pay ID:</p>
           <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-4">
             <code className="break-all text-sm text-slate-800">
-              {siteConfig.payments.usdt.walletAddress}
+              {siteConfig.payments.usdt.binancePayId}
             </code>
             <button
-              onClick={handleCopy}
+              onClick={() => handleCopy("binance", siteConfig.payments.usdt.binancePayId)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm hover:text-blue-600"
-              aria-label="Copiar dirección"
+              aria-label="Copiar Binance Pay ID"
             >
-              {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+              {copiedField === "binance" ? (
+                <Check className="h-4 w-4 text-emerald-600" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
             </button>
           </div>
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-slate-600">
             <li>
-              Abre tu app de Binance y envía{" "}
-              <span className="font-semibold">
-                {totalDue} USDT
-              </span>{" "}
-              (el monto puede variar ligeramente según la tasa de tu
-              exchange) a la dirección de arriba, usando la red indicada.
+              Abre tu app de Binance, ve a{" "}
+              <span className="font-semibold">Pay → Enviar</span> y busca el
+              Pay ID de arriba.
+            </li>
+            <li>
+              Envía{" "}
+              <span className="font-semibold">{totalDue} USDT</span> (el
+              monto puede variar ligeramente según la tasa de tu exchange).
             </li>
             <li>Toma una captura de pantalla del comprobante de la transacción.</li>
             <li>
@@ -216,12 +234,14 @@ export function PaymentView() {
               en el chat de WhatsApp que se abrirá.
             </li>
           </ol>
-          <p className="mt-3 text-xs text-slate-500">
-            Binance Pay ID alternativo:{" "}
-            <span className="font-medium text-slate-700">
-              {siteConfig.payments.usdt.binancePayId}
-            </span>
-          </p>
+          {siteConfig.payments.usdt.walletAddress && (
+            <p className="mt-3 text-xs text-slate-500">
+              ¿No usas Binance Pay? También puedes enviar USDT ({siteConfig.payments.usdt.network}) a:{" "}
+              <span className="font-medium text-slate-700">
+                {siteConfig.payments.usdt.walletAddress}
+              </span>
+            </p>
+          )}
         </div>
       )}
 

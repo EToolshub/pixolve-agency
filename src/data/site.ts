@@ -34,15 +34,16 @@ export const siteConfig = {
   // Métodos de pago manuales (sin necesidad de claves secretas de API).
   payments: {
     paypal: {
-      // TODO: reemplaza "pixolveagency" con tu usuario real de PayPal.me
-      meLink: "https://paypal.me/pixolveagency",
-      email: "pagos@pixolveagency.com", // TODO
+      email: "gabosbmaestre@gmail.com",
+      // TODO (opcional): si creas un enlace PayPal.me, agrégalo aquí para tener un botón directo.
+      meLink: "",
     },
     usdt: {
-      network: "BEP20 (BNB Smart Chain) vía Binance Pay",
-      // TODO: reemplaza con tu dirección real de wallet USDT o tu Binance Pay ID
-      walletAddress: "0xTU_DIRECCION_USDT_AQUI",
-      binancePayId: "000000000", // TODO: tu Binance Pay ID (opcional)
+      // Red usada solo si además agregas una wallet on-chain abajo.
+      network: "BEP20 (BNB Smart Chain)",
+      binancePayId: "281448770",
+      // TODO (opcional): agrega una dirección de wallet on-chain si también aceptas USDT fuera de Binance Pay.
+      walletAddress: "",
     },
   },
 
