@@ -21,7 +21,7 @@ export const siteConfig = {
       "Hola Pixolve Agency 👋, quiero más información sobre sus servicios.",
   },
 
-  email: "contacto@pixolveagency.com", // TODO: tu correo real
+  email: "pixolveagency@gmail.com",
   location: "Atención 100% remota para clientes en toda Latinoamérica y EE. UU.",
 
   social: {

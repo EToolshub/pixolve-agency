@@ -40,6 +40,9 @@ variables de entorno.
 4. Al confirmar, se genera un número de pedido y se abre WhatsApp con un
    mensaje prellenado (resumen del pedido + datos del cliente) para que el
    cliente envíe su comprobante de pago directamente a tu WhatsApp Business.
+   Al mismo tiempo, el sitio envía en segundo plano un correo con el mismo
+   resumen a `pixolveagency@gmail.com` (ver "Notificación de pedidos por
+   correo" abajo) para que quede un registro de todos los pedidos.
 5. El cliente llega a `/pedido-confirmado` con el resumen y los próximos
    pasos.
 
@@ -61,6 +64,33 @@ puede leer ni exportar la lista desde el navegador.
 Para ver o exportar los correos, entra al
 [panel de Supabase](https://supabase.com/dashboard/project/gqjptrcvkbzotzserdop/editor)
 → tabla `subscribers`.
+
+## Notificación de pedidos por correo
+
+Cada vez que un cliente confirma un pedido, `POST /api/notify-order`
+([`src/app/api/notify-order/route.ts`](src/app/api/notify-order/route.ts))
+envía un correo con el resumen completo (servicios, precio, datos del
+cliente y briefing) a `pixolveagency@gmail.com`, usando el propio Gmail
+como servidor SMTP. Si algo falla (o las credenciales no están
+configuradas), el pedido sigue confirmándose normalmente por WhatsApp — el
+correo es un respaldo, no un bloqueo.
+
+**Para activarlo en producción**, faltan 3 pasos únicos (5 minutos):
+
+1. En la cuenta de Google de `pixolveagency@gmail.com`, activa la
+   **verificación en dos pasos**: [myaccount.google.com/security](https://myaccount.google.com/security).
+2. Genera una **contraseña de aplicación**: [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
+   → elige "Otra" como app, ponle un nombre como "Pixolve Web", y copia la
+   contraseña de 16 caracteres que te genera (sin espacios).
+3. En Vercel: tu proyecto → **Settings → Environment Variables**, agrega:
+   - `GMAIL_USER` = `pixolveagency@gmail.com`
+   - `GMAIL_APP_PASSWORD` = la contraseña de 16 caracteres del paso 2
+
+   Guarda y vuelve a desplegar (Vercel → Deployments → ⋯ → Redeploy) para
+   que tomen efecto.
+
+Estas dos variables sí son secretas — a diferencia del resto de la
+configuración del sitio, **no** viven en el código ni se suben a GitHub.
 
 ## Desarrollo local
 

@@ -55,7 +55,17 @@ export function PaymentView() {
   function handleConfirm() {
     if (!order || !method) return;
 
-    savePendingOrder({ ...order, paymentMethod: method });
+    const finalOrder = { ...order, paymentMethod: method };
+    savePendingOrder(finalOrder);
+
+    // Aviso por correo a la agencia; no bloquea el checkout si falla.
+    fetch("/api/notify-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(finalOrder),
+    }).catch(() => {
+      // sin conexión o error de red: el pedido sigue confirmándose por WhatsApp
+    });
 
     const itemsList = order.items
       .map(
