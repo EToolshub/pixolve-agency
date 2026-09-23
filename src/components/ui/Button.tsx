@@ -2,29 +2,31 @@ import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "whatsapp" | "outlineLight";
+type Variant = "primary" | "secondary" | "ghost" | "whatsapp" | "outlineLight" | "light" | "dark";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 ease-out select-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+  "group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-semibold transition-all duration-300 ease-out select-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 disabled:opacity-45 disabled:pointer-events-none active:scale-[0.97]";
 
+// El botón primario usa texto oscuro sobre naranja: contraste 5.6:1 (WCAG AA).
 const variants: Record<Variant, string> = {
   primary:
-    "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5 hover:from-blue-500 hover:to-blue-600 active:translate-y-0 active:shadow-md",
+    "bg-brand-500 text-ink-950 shadow-[0_8px_30px_-8px_rgb(241_90_35/0.65)] hover:bg-brand-400 hover:shadow-[0_12px_40px_-8px_rgb(241_90_35/0.8)] hover:-translate-y-0.5",
   secondary:
-    "bg-card text-blue-600 border-2 border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:-translate-y-0.5 active:translate-y-0",
-  ghost:
-    "bg-transparent text-body-strong hover:bg-alt-2 hover:-translate-y-0.5 active:translate-y-0",
+    "border border-ink-600 bg-white/[0.03] text-heading backdrop-blur hover:border-brand-500/70 hover:bg-brand-500/10 hover:text-white hover:-translate-y-0.5",
+  ghost: "bg-transparent text-body-strong hover:bg-white/5 hover:text-white",
   whatsapp:
-    "bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0",
+    "bg-whatsapp text-ink-950 shadow-[0_8px_30px_-10px_rgb(37_211_102/0.6)] hover:brightness-110 hover:-translate-y-0.5",
   outlineLight:
-    "border border-white/30 text-white bg-white/5 backdrop-blur hover:bg-white/15 hover:-translate-y-0.5 active:translate-y-0",
+    "border border-white/25 bg-white/5 text-white backdrop-blur hover:bg-white/15 hover:-translate-y-0.5",
+  light: "bg-white text-ink-950 hover:bg-brand-50 hover:-translate-y-0.5",
+  dark: "bg-ink-950 text-white hover:bg-ink-800 hover:-translate-y-0.5",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
+  sm: "h-10 px-4 text-sm",
+  md: "h-12 px-6 text-[15px]",
+  lg: "h-14 px-8 text-base",
 };
 
 type CommonProps = {
@@ -62,25 +64,30 @@ export function Button(props: ButtonProps) {
     children,
   } = props;
 
-  const classes = cn(
-    base,
-    variants[variant],
-    sizes[size],
-    fullWidth && "w-full",
-    className
-  );
+  const classes = cn(base, variants[variant], sizes[size], fullWidth && "w-full", className);
 
   const content = (
     <>
-      {icon && iconPosition === "left" && icon}
-      {children}
-      {icon && iconPosition === "right" && icon}
+      {variant === "primary" && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover/btn:animate-shine"
+        />
+      )}
+      {icon && iconPosition === "left" && (
+        <span className="relative flex shrink-0">{icon}</span>
+      )}
+      <span className="relative">{children}</span>
+      {icon && iconPosition === "right" && (
+        <span className="relative flex shrink-0 transition-transform duration-300 group-hover/btn:translate-x-0.5">
+          {icon}
+        </span>
+      )}
     </>
   );
 
   if ("href" in props && props.href) {
-    const isExternal =
-      props.href.startsWith("http") || props.href.startsWith("https://wa.me");
+    const isExternal = props.href.startsWith("http");
     return (
       <Link
         href={props.href}

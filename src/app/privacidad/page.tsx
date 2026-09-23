@@ -54,7 +54,7 @@ export default function PrivacidadPage() {
       <p>
         Puedes solicitar en cualquier momento acceso, corrección o
         eliminación de los datos que nos hayas compartido, escribiendo a{" "}
-        <a href={`mailto:${siteConfig.email}`} className="text-blue-600 underline">
+        <a href={`mailto:${siteConfig.email}`} className="text-brand-400 underline">
           {siteConfig.email}
         </a>
         .

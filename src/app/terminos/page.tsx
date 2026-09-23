@@ -74,7 +74,7 @@ export default function TerminosPage() {
       <h2>7. Cancelaciones y reembolsos</h2>
       <p>
         Consulta nuestra{" "}
-        <a href="/reembolsos" className="text-blue-600 underline">
+        <a href="/reembolsos" className="text-brand-400 underline">
           Política de reembolsos
         </a>{" "}
         para conocer las condiciones específicas según la etapa del proyecto.
@@ -90,7 +90,7 @@ export default function TerminosPage() {
       <h2>9. Contacto</h2>
       <p>
         Para dudas sobre estos términos, escríbenos a{" "}
-        <a href={`mailto:${siteConfig.email}`} className="text-blue-600 underline">
+        <a href={`mailto:${siteConfig.email}`} className="text-brand-400 underline">
           {siteConfig.email}
         </a>{" "}
         o por WhatsApp al {siteConfig.whatsapp.displayNumber}.

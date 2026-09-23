@@ -1,8 +1,23 @@
-import { MessageCircle, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, MessageCircle, Palette, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { WordRotator } from "@/components/ui/WordRotator";
+import { Marquee } from "@/components/ui/Marquee";
+import { LogoMark } from "@/components/brand/Logo";
 import { siteConfig } from "@/data/site";
 import { buildWhatsAppLink } from "@/lib/utils";
+
+const marqueeItems = [
+  "Branding",
+  "Diseño gráfico",
+  "UI/UX",
+  "Redes sociales",
+  "Páginas web",
+  "E-commerce",
+  "Hosting",
+  "Estrategia digital",
+];
 
 export function Hero() {
   const whatsappHref = buildWhatsAppLink(
@@ -11,61 +26,113 @@ export function Hero() {
   );
 
   return (
-    <section className="relative overflow-hidden bg-surface">
-      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-gradient-to-br from-blue-200/60 to-sky-100/40 blur-3xl animate-blob dark:opacity-30" />
+    <section className="relative -mt-[4.75rem] overflow-hidden pt-[4.75rem]">
+      {/* Fondo: retícula, halo naranja y ruido */}
+      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_20%,black,transparent)]" />
+      <div className="pointer-events-none absolute -top-48 left-1/2 h-[640px] w-[640px] -translate-x-1/2 rounded-full bg-brand-500/25 blur-[140px] lg:left-[72%]" />
+      <div className="pointer-events-none absolute -left-40 top-1/2 h-80 w-80 rounded-full bg-brand-700/15 blur-[120px]" />
+      <div className="bg-noise pointer-events-none absolute inset-0 hidden sm:block" />
 
-      <Container className="relative py-24 sm:py-32">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-badge-blue px-4 py-1.5 text-sm font-semibold text-badge-blue ring-1 ring-inset ring-blue-600/20">
-            <Sparkles className="h-3.5 w-3.5" />
-            Diseño, tecnología y estrategia en un solo lugar
+      <Container className="relative grid items-center gap-14 pb-16 pt-16 sm:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:pb-24">
+        <div className="text-center lg:text-left">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-2 pr-4 text-sm font-medium text-body-strong backdrop-blur animate-fade-up">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
+            </span>
+            Agencia creativa · Atención 100% remota
           </span>
 
-          <h1 className="text-balance mt-6 text-4xl font-extrabold tracking-tight text-heading sm:text-6xl">
-            Impulsa tu marca con{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
-              diseño y tecnología
-            </span>{" "}
-            que sí convierten
+          <h1 className="text-balance mt-7 text-[2.6rem] font-extrabold leading-[1.02] tracking-tight text-heading sm:text-6xl lg:text-7xl">
+            Impulsamos marcas que{" "}
+            <WordRotator
+              words={["venden más", "se recuerdan", "enamoran", "escalan"]}
+              className="text-gradient-brand pb-1"
+            />
           </h1>
 
-          <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-body">
-            Diseño gráfico, manejo de redes sociales, UI/UX, páginas web y
-            hosting para negocios de cualquier tamaño. Compra tu servicio en
-            minutos, con procesos 100% transparentes de principio a fin.
+          <p className="text-balance mx-auto mt-7 max-w-xl text-lg leading-relaxed text-body lg:mx-0">
+            Diseño gráfico, redes sociales, UI/UX, páginas web y hosting para
+            negocios de cualquier tamaño. Compra tu servicio en minutos, con
+            precios claros y un proceso transparente de principio a fin.
           </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button href="/servicios" size="lg">
-              Ver servicios y precios
-            </Button>
-            <Button
-              href={whatsappHref}
-              variant="whatsapp"
-              size="lg"
-              icon={<MessageCircle className="h-5 w-5" />}
-            >
+          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+            <Magnetic>
+              <Button href="/servicios" size="lg" icon={<ArrowRight className="h-5 w-5" />} iconPosition="right">
+                Ver servicios y precios
+              </Button>
+            </Magnetic>
+            <Button href={whatsappHref} variant="secondary" size="lg" icon={<MessageCircle className="h-5 w-5 text-whatsapp" />}>
               Hablar por WhatsApp
             </Button>
           </div>
 
-          <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm font-medium text-muted">
-            <span className="inline-flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-blue-600" />
+          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-muted lg:justify-start">
+            <li className="inline-flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-brand-400" />
               Pagos seguros con PayPal y USDT
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Zap className="h-4 w-4 text-blue-600" />
-              Procesos 100% transparentes
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-blue-600" />
+            </li>
+            <li className="inline-flex items-center gap-2">
+              <Zap className="h-4 w-4 text-brand-400" />
+              Precios claros, sin sorpresas
+            </li>
+            <li className="inline-flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 text-brand-400" />
               Soporte directo por WhatsApp
-            </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Visual de marca */}
+        <div className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" aria-hidden>
+          <div className="absolute inset-0 rounded-full border border-white/[0.06]" />
+          <div className="absolute inset-[12%] rounded-full border border-white/[0.06]" />
+          <div className="absolute inset-[26%] rounded-full border border-brand-500/20 bg-brand-500/[0.04]" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <LogoMark decorative priority className="h-[58%] w-auto animate-float drop-shadow-[0_30px_60px_rgb(241_90_35/0.35)]" />
           </div>
+
+          <FloatingChip className="left-[-6%] top-[14%]" delay="0s">
+            <Palette className="h-4 w-4 text-brand-400" />
+            Branding listo para crecer
+          </FloatingChip>
+          <FloatingChip className="right-[-8%] top-[42%]" delay="1.2s">
+            <Sparkles className="h-4 w-4 text-brand-400" />
+            UI/UX que convierte
+          </FloatingChip>
+          <FloatingChip className="bottom-[12%] left-[2%]" delay="2.4s">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            Pedido confirmado
+          </FloatingChip>
         </div>
       </Container>
+
+      <div className="relative border-y border-white/[0.06] bg-ink-900/60 py-6">
+        <Marquee
+          items={marqueeItems}
+          itemClassName="font-display text-3xl font-bold uppercase tracking-tight text-outline sm:text-5xl"
+        />
+      </div>
     </section>
+  );
+}
+
+function FloatingChip({
+  children,
+  className,
+  delay,
+}: {
+  children: React.ReactNode;
+  className: string;
+  delay: string;
+}) {
+  return (
+    <div
+      style={{ animationDelay: delay }}
+      className={`absolute flex animate-float items-center gap-2 rounded-2xl border border-white/10 bg-ink-850/80 px-4 py-3 text-sm font-semibold text-heading shadow-2xl backdrop-blur-md ${className}`}
+    >
+      {children}
+    </div>
   );
 }

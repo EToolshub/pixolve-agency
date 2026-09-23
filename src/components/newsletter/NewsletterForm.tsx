@@ -46,26 +46,28 @@ export function NewsletterForm({
 
   return (
     <div className={className}>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-full sm:flex-row sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-1.5">
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="tucorreo@ejemplo.com"
-          className="w-full min-w-0 flex-1 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:w-64"
+          aria-label="Tu correo electrónico"
+          autoComplete="email"
+          className="h-12 w-full min-w-0 rounded-full border border-white/10 bg-white/[0.03] px-5 text-base text-white sm:flex-1 sm:text-sm outline-none transition placeholder:text-subtle focus:border-brand-500 focus:ring-2 focus:ring-brand-500/25 sm:h-11 sm:w-72 sm:border-transparent sm:bg-transparent sm:focus:ring-0"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-600/25 disabled:opacity-60"
+          className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-brand-500 px-6 text-sm font-semibold text-ink-950 transition-all hover:bg-brand-400 disabled:opacity-60 sm:h-11"
         >
           {status === "loading" ? "Enviando..." : "Suscribirme"}
           {status !== "loading" && <ArrowRight className="h-4 w-4" />}
         </button>
       </form>
       {status === "duplicate" && (
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-muted">
           Ese correo ya está suscrito. ¡Gracias por tu interés!
         </p>
       )}

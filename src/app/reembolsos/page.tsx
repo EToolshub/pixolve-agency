@@ -52,7 +52,7 @@ export default function ReembolsosPage() {
       <p>
         Escríbenos por WhatsApp al {siteConfig.whatsapp.displayNumber} o al
         correo{" "}
-        <a href={`mailto:${siteConfig.email}`} className="text-blue-600 underline">
+        <a href={`mailto:${siteConfig.email}`} className="text-brand-400 underline">
           {siteConfig.email}
         </a>{" "}
         indicando tu número de pedido. Evaluamos cada solicitud en un plazo

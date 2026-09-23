@@ -15,6 +15,8 @@ export type PendingOrder = {
   totalMensual: number;
   paymentMethod?: PaymentMethod;
   briefs?: Record<string, ServiceBriefAnswers>;
+  /** Fecha ISO en que el cliente confirmó el pedido; a partir de ahí no se reutiliza. */
+  confirmedAt?: string;
 };
 
 export function savePendingOrder(order: PendingOrder) {

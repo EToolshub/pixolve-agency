@@ -1,42 +1,72 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import type { Service } from "@/lib/types";
 import { iconMap } from "@/lib/icon-map";
-import { formatCurrency } from "@/lib/utils";
-import { getStartingPrice } from "@/data/services";
+import { cn, formatCurrency } from "@/lib/utils";
+import { getStartingPackage } from "@/data/services";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 
-export function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({
+  service,
+  featured,
+  className,
+}: {
+  service: Service;
+  /** Variante grande del bento: muestra también los puntos clave. */
+  featured?: boolean;
+  className?: string;
+}) {
   const Icon = iconMap[service.icon];
-  const startingPrice = getStartingPrice(service);
-  const startingBilling = service.packages.find(
-    (pkg) => pkg.price === startingPrice
-  )?.billing;
+  const starting = getStartingPackage(service);
 
   return (
-    <Link
-      href={`/servicios/${service.slug}`}
-      className="group relative flex flex-col rounded-2xl border border-default bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-600/10"
-    >
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-500/10 dark:text-blue-400">
-        {Icon && <Icon className="h-6 w-6" />}
-      </div>
-      <h3 className="mt-5 text-lg font-bold text-heading">{service.name}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-body">
-        {service.shortDescription}
-      </p>
-      <div className="mt-6 flex items-center justify-between border-t border-subtle pt-4">
-        <span className="text-sm text-muted">
-          Desde{" "}
-          <span className="font-bold text-heading">
-            {formatCurrency(startingPrice)}
+    <SpotlightCard className={cn("group h-full hover:-translate-y-1", className)}>
+      <Link
+        href={`/servicios/${service.slug}`}
+        className="relative flex h-full flex-col p-7 sm:p-8"
+        aria-label={`${service.name}: ver paquetes y precios`}
+      >
+        <div className="flex items-start justify-between">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-400 ring-1 ring-brand-500/25 transition-all duration-300 group-hover:scale-105 group-hover:bg-brand-500 group-hover:text-ink-950">
+            {Icon && <Icon className="h-6 w-6" />}
           </span>
-          {startingBilling === "mensual" ? "/mes" : ""}
+          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-body transition-all duration-300 group-hover:-rotate-45 group-hover:border-brand-500 group-hover:bg-brand-500 group-hover:text-ink-950">
+            <ArrowUpRight className="h-4 w-4 rotate-45" />
+          </span>
+        </div>
+
+        <span className="mt-7 text-xs font-semibold uppercase tracking-[0.16em] text-subtle">
+          {service.category}
         </span>
-        <span className="flex items-center gap-1 text-sm font-semibold text-blue-600">
-          Ver más
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </span>
-      </div>
-    </Link>
+        <h3 className={cn("mt-2 font-bold text-heading", featured ? "text-2xl sm:text-3xl" : "text-xl")}>
+          {service.name}
+        </h3>
+        <p className="mt-3 text-[15px] leading-relaxed text-body">{service.shortDescription}</p>
+
+        {featured && (
+          <ul className="mt-5 space-y-2">
+            {service.bullets.map((bullet) => (
+              <li key={bullet} className="flex items-center gap-2.5 text-sm text-body-strong">
+                <Check className="h-4 w-4 shrink-0 text-brand-400" />
+                {bullet}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="mt-auto flex items-end justify-between gap-4 pt-8">
+          <p className="text-sm text-muted">
+            Desde
+            <span className="block font-display text-2xl font-bold text-heading">
+              {formatCurrency(starting.price)}
+              {starting.billing === "mensual" && <span className="text-sm font-medium text-muted">/mes</span>}
+            </span>
+          </p>
+          <span className="text-sm font-semibold text-brand-400 transition-colors group-hover:text-brand-300">
+            Ver paquetes
+          </span>
+        </div>
+      </Link>
+    </SpotlightCard>
   );
 }

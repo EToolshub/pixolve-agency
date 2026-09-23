@@ -29,6 +29,16 @@ Ninguno de estos valores es secreto (son datos públicos pensados para
 mostrarse en la web), así que viven directamente en el código y no en
 variables de entorno.
 
+## Marca y diseño
+
+- Paleta: naranja de marca `#F15A23` sobre negros cálidos (`ink-*`), definida
+  como tokens en [`src/app/globals.css`](src/app/globals.css). Usa las clases
+  `brand-*` / `ink-*` en lugar de colores sueltos.
+- Tipografías: Sora (títulos) y Plus Jakarta Sans (texto).
+- Logo, isotipo, favicon e íconos se generan desde los originales en
+  `assets/brand/` con `node scripts/build-brand-assets.mjs`. Si cambias el
+  logo, reemplaza esos JPG y vuelve a ejecutar el script.
+
 ## Cómo funciona el flujo de compra
 
 1. El cliente navega `/servicios`, entra al detalle de un servicio y agrega

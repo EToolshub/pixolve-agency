@@ -2,6 +2,7 @@ import { CreditCard, Eye, MessageCircle, TrendingUp } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 
 const reasons = [
   {
@@ -32,26 +33,27 @@ const reasons = [
 
 export function WhyUs() {
   return (
-    <section className="bg-alt py-24">
-      <Container>
+    <section className="relative overflow-hidden py-24 sm:py-32">
+      <div className="pointer-events-none absolute right-0 top-1/3 h-96 w-96 rounded-full bg-brand-500/10 blur-[140px]" />
+      <Container className="relative">
         <SectionHeading
           eyebrow="Por qué elegirnos"
-          title="Una agencia diseñada para generarte confianza"
+          title="Una agencia diseñada para"
+          highlight="generarte confianza"
           description="Sabemos que contratar servicios en línea puede generar dudas. Por eso construimos cada proceso para que sepas siempre en qué punto estás."
         />
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason, index) => (
-            <FadeIn key={reason.title} delay={index * 0.08}>
-              <div className="h-full rounded-2xl bg-card p-7 shadow-sm ring-1 ring-default">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white">
+            <FadeIn key={reason.title} delay={index * 0.08} className="h-full">
+              <SpotlightCard className="h-full p-7">
+                <span className="font-display text-sm font-semibold text-subtle">0{index + 1}</span>
+                <div className="mt-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-ink-950 shadow-[0_10px_30px_-10px_rgb(241_90_35/0.7)]">
                   <reason.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-5 font-bold text-heading">{reason.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-body">
-                  {reason.description}
-                </p>
-              </div>
+                <h3 className="mt-6 text-lg font-bold text-heading">{reason.title}</h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-body">{reason.description}</p>
+              </SpotlightCard>
             </FadeIn>
           ))}
         </div>

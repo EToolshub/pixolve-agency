@@ -1,80 +1,97 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Sistema de diseño Pixolve Agency
+   Paleta tomada del logotipo: naranja de marca #F15A23 sobre negro cálido,
+   con blanco para el texto principal. El sitio es "dark-first" porque el
+   logotipo (blanco + naranja) está pensado para fondos oscuros.
+   ───────────────────────────────────────────────────────────────────────── */
+
 :root {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-900: #1e3a8a;
+  color-scheme: dark;
+
+  /* Naranja de marca */
+  --color-brand-50: #fff4ee;
+  --color-brand-100: #ffe4d5;
+  --color-brand-200: #ffc6a8;
+  --color-brand-300: #ff9f70;
+  --color-brand-400: #ff7a3f;
+  --color-brand-500: #f15a23; /* naranja del logotipo */
+  --color-brand-600: #d94715;
+  --color-brand-700: #b43812;
+  --color-brand-800: #8f2e14;
+  --color-brand-900: #742814;
+  --color-brand-950: #3f1107;
+
+  /* Negros cálidos (tomados del fondo del logotipo) */
+  --color-ink-950: #0b0b0a;
+  --color-ink-900: #111110;
+  --color-ink-850: #161615;
+  --color-ink-800: #1c1c1a;
+  --color-ink-700: #262624;
+  --color-ink-600: #34342f;
+  --color-ink-500: #4a4a44;
 
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #128c7e;
 
-  /* Tokens semánticos de tema (claro por defecto) */
-  --surface-page: #ffffff;
-  --surface-card: #ffffff;
-  --surface-alt: #f8fafc; /* slate-50 */
-  --surface-alt-2: #f1f5f9; /* slate-100 */
-  --surface-header: rgb(255 255 255 / 0.85);
+  /* Tokens semánticos */
+  --surface-page: var(--color-ink-950);
+  --surface-card: var(--color-ink-850);
+  --surface-alt: var(--color-ink-900);
+  --surface-alt-2: var(--color-ink-800);
+  --surface-header: rgb(11 11 10 / 0.72);
 
-  --text-heading: #0f172a; /* slate-900 */
-  --text-body: #475569; /* slate-600 */
-  --text-body-strong: #334155; /* slate-700 */
-  --text-muted: #64748b; /* slate-500 */
-  --text-subtle: #94a3b8; /* slate-400 */
+  --text-heading: #f7f7f5;
+  --text-body: #b4b4ae;
+  --text-body-strong: #d9d9d4;
+  --text-muted: #93938c;
+  --text-subtle: #6f6f69;
 
-  --border-default: #e2e8f0; /* slate-200 */
-  --border-default-80: rgb(226 232 240 / 0.8);
-  --border-input: #cbd5e1; /* slate-300 */
-  --border-subtle: #f1f5f9; /* slate-100 */
+  --border-default: #262624;
+  --border-default-80: rgb(255 255 255 / 0.07);
+  --border-input: #34342f;
+  --border-subtle: #1f1f1d;
 
-  --badge-blue-bg: #eff6ff; /* blue-50 */
-  --badge-blue-text: #1d4ed8; /* blue-700 */
+  --badge-brand-bg: rgb(241 90 35 / 0.12);
+  --badge-brand-text: #ff9f70;
 
-  --grid-line: rgba(15, 23, 42, 0.04);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --surface-page: #020617; /* slate-950 */
-    --surface-card: #0f172a; /* slate-900 */
-    --surface-alt: #0f172a; /* slate-900 */
-    --surface-alt-2: #1e293b; /* slate-800 */
-    --surface-header: rgb(2 6 23 / 0.85);
-
-    --text-heading: #f8fafc; /* slate-50 */
-    --text-body: #94a3b8; /* slate-400 */
-    --text-body-strong: #cbd5e1; /* slate-300 */
-    --text-muted: #94a3b8; /* slate-400 */
-    --text-subtle: #64748b; /* slate-500 */
-
-    --border-default: #1e293b; /* slate-800 */
-    --border-default-80: rgb(30 41 59 / 0.8);
-    --border-input: #334155; /* slate-700 */
-    --border-subtle: #1e293b; /* slate-800 */
-
-    --badge-blue-bg: rgb(37 99 235 / 0.12);
-    --badge-blue-text: #93c5fd; /* blue-300 */
-
-    --grid-line: rgba(148, 163, 184, 0.08);
-  }
+  --grid-line: rgb(255 255 255 / 0.045);
 }
 
 @theme inline {
   --font-sans: var(--font-jakarta);
+  --font-display: var(--font-sora);
 
   --color-brand-50: var(--color-brand-50);
   --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
   --color-brand-500: var(--color-brand-500);
   --color-brand-600: var(--color-brand-600);
   --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
   --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+
+  --color-ink-950: var(--color-ink-950);
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-850: var(--color-ink-850);
+  --color-ink-800: var(--color-ink-800);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-600: var(--color-ink-600);
+  --color-ink-500: var(--color-ink-500);
+
   --color-whatsapp: var(--color-whatsapp);
   --color-whatsapp-dark: var(--color-whatsapp-dark);
 
   --animate-fade-up: fade-up 0.7s ease-out both;
   --animate-blob: blob 16s infinite ease-in-out;
+  --animate-float: float 7s infinite ease-in-out;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-shine: shine 3.2s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
 
   @keyframes fade-up {
     from {
@@ -99,10 +116,49 @@
       transform: translate(-20px, 20px) scale(0.95);
     }
   }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(-1.5deg);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes shine {
+    0% {
+      transform: translateX(-120%) skewX(-20deg);
+    }
+    60%,
+    100% {
+      transform: translateX(220%) skewX(-20deg);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.9);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
 }
 
-/* Utilidades semánticas de tema: cambian solas entre claro/oscuro según el
-   dispositivo, sin necesidad de escribir "dark:" en cada componente. */
+/* Utilidades semánticas de tema */
 @utility bg-surface {
   background-color: var(--surface-page);
 }
@@ -118,8 +174,8 @@
 @utility bg-header {
   background-color: var(--surface-header);
 }
-@utility bg-badge-blue {
-  background-color: var(--badge-blue-bg);
+@utility bg-badge-brand {
+  background-color: var(--badge-brand-bg);
 }
 @utility text-heading {
   color: var(--text-heading);
@@ -136,8 +192,8 @@
 @utility text-subtle {
   color: var(--text-subtle);
 }
-@utility text-badge-blue {
-  color: var(--badge-blue-text);
+@utility text-badge-brand {
+  color: var(--badge-brand-text);
 }
 @utility border-default {
   border-color: var(--border-default);
@@ -158,19 +214,80 @@
   --tw-ring-color: var(--surface-page);
 }
 
-* {
+/* Texto con degradado naranja de marca */
+@utility text-gradient-brand {
+  background-image: linear-gradient(100deg, #ffb48a 0%, #ff7a3f 35%, #f15a23 70%, #ff9f70 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Toques en móvil: sin el recuadro gris del navegador ni retraso de doble toque */
+a,
+button,
+label,
+summary {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   background-color: var(--surface-page);
   color: var(--text-heading);
   font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-sora), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
 ::selection {
-  background: var(--color-brand-600);
-  color: #ffffff;
+  background: var(--color-brand-500);
+  color: #0b0b0a;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Inputs: autocompletado del navegador acorde al tema oscuro */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-heading);
+  box-shadow: 0 0 0 1000px var(--color-ink-800) inset;
+  caret-color: var(--text-heading);
+}
+
+select option {
+  background-color: var(--color-ink-850);
+  color: var(--text-heading);
 }
 
 .text-balance {
@@ -180,5 +297,82 @@ body {
 .bg-grid {
   background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 48px 48px;
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+/* Tarjeta con "spotlight": un brillo naranja sigue al cursor.
+   Las variables --mx/--my las actualiza <SpotlightCard>. */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, -30%),
+    rgb(241 90 35 / 0.75),
+    transparent 45%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    520px circle at var(--mx, 50%) var(--my, -30%),
+    rgb(241 90 35 / 0.09),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.spotlight:hover::before,
+.spotlight:hover::after,
+.spotlight:focus-within::before,
+.spotlight:focus-within::after {
+  opacity: 1;
+}
+
+/* Texto con contorno para la franja de marquee */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.22);
+}
+
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body,
+  main,
+  main * {
+    background: #fff !important;
+    color: #111 !important;
+    border-color: #ddd !important;
+    box-shadow: none !important;
+  }
 }

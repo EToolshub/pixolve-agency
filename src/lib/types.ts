@@ -11,14 +11,34 @@ export type ServicePackage = {
   deliveryTime?: string;
 };
 
+export type ServiceCategory = "Diseño" | "Marketing" | "Desarrollo";
+
+export type ServiceHighlight = {
+  /** Nombre de un ícono registrado en `src/lib/icon-map.ts`. */
+  icon: string;
+  title: string;
+  description: string;
+};
+
 export type Service = {
   slug: string;
   name: string;
   shortName: string;
   icon: string;
+  category: ServiceCategory;
+  /** Titular corto y persuasivo para la página individual del servicio. */
+  headline: string;
   shortDescription: string;
   description: string;
   bullets: string[];
+  /** Entregables / qué obtienes, mostrados como bento en la página del servicio. */
+  deliverables: ServiceHighlight[];
+  /** Pasos específicos de cómo se trabaja este servicio. */
+  steps: { title: string; description: string }[];
+  /** Perfiles de cliente para los que este servicio es ideal. */
+  idealFor: string[];
+  /** Categoría del portafolio relacionada, para mostrar trabajos reales. */
+  portfolioCategory?: "Branding" | "UI/UX" | "Redes Sociales";
   packages: ServicePackage[];
   faqs: { question: string; answer: string }[];
   seo: {

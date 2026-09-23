@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   Check,
+  Coins,
   Copy,
+  ExternalLink,
+  Lock,
   MessageCircle,
   ShieldCheck,
+  Wallet,
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
+import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { cn, formatCurrency, buildWhatsAppLink } from "@/lib/utils";
 import { getPendingOrder, savePendingOrder, type PendingOrder } from "@/lib/order-storage";
 import { useCart } from "@/context/CartContext";
@@ -18,29 +26,58 @@ import { siteConfig } from "@/data/site";
 import { briefQuestions } from "@/data/briefs";
 import type { PaymentMethod } from "@/lib/types";
 
+type CopyField = "binance" | "wallet" | "paypal" | "amount";
+
+const methods: {
+  id: PaymentMethod;
+  name: string;
+  description: string;
+  tag: string;
+  icon: typeof Wallet;
+}[] = [
+  {
+    id: "paypal",
+    name: "PayPal",
+    description: "Paga con tu saldo o la tarjeta vinculada a tu cuenta PayPal.",
+    tag: "Protección al comprador de PayPal",
+    icon: Wallet,
+  },
+  {
+    id: "usdt",
+    name: "USDT · Binance Pay",
+    description: "Transferencia en criptomoneda estable desde tu app de Binance.",
+    tag: "Transacción verificable",
+    icon: Coins,
+  },
+];
+
 export function PaymentView() {
   const router = useRouter();
   const { clearCart } = useCart();
   const [order, setOrder] = useState<PendingOrder | null>(null);
   const [method, setMethod] = useState<PaymentMethod | null>(null);
+  const [paid, setPaid] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [copiedField, setCopiedField] = useState<"binance" | "wallet" | "paypal" | null>(null);
+  const [copiedField, setCopiedField] = useState<CopyField | null>(null);
 
   useEffect(() => {
     const pending = getPendingOrder();
-    if (!pending) {
+    if (!pending || pending.confirmedAt) {
       router.replace("/carrito");
       return;
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hidratación desde localStorage al montar
     setOrder(pending);
+    if (pending.paymentMethod) setMethod(pending.paymentMethod);
   }, [router]);
 
-  if (!order) return null;
+  if (!order) return <Container className="min-h-[60vh] py-16" />;
 
   const totalDue = order.totalUnico + order.totalMensual;
+  const canConfirm = Boolean(method) && paid && accepted && !confirmed;
 
-  function handleCopy(field: "binance" | "wallet" | "paypal", value: string) {
+  function handleCopy(field: CopyField, value: string) {
     navigator.clipboard
       .writeText(value)
       .then(() => {
@@ -52,10 +89,19 @@ export function PaymentView() {
       });
   }
 
-  function handleConfirm() {
-    if (!order || !method) return;
+  function selectMethod(next: PaymentMethod) {
+    setMethod(next);
+    setPaid(false);
+  }
 
-    const finalOrder = { ...order, paymentMethod: method };
+  function handleConfirm() {
+    if (!order || !method || !canConfirm) return;
+
+    const finalOrder: PendingOrder = {
+      ...order,
+      paymentMethod: method,
+      confirmedAt: new Date().toISOString(),
+    };
     savePendingOrder(finalOrder);
 
     // Aviso por correo a la agencia; no bloquea el checkout si falla.
@@ -70,9 +116,9 @@ export function PaymentView() {
     const itemsList = order.items
       .map(
         (item) =>
-          `• ${item.packageName} (${item.serviceName}) — ${formatCurrency(
-            item.price
-          )}${item.billing === "mensual" ? "/mes" : ""}`
+          `• ${item.packageName} (${item.serviceName}) — ${formatCurrency(item.price)}${
+            item.billing === "mensual" ? "/mes" : ""
+          }`
       )
       .join("\n");
 
@@ -126,180 +172,284 @@ export function PaymentView() {
     window.open(href, "_blank", "noopener,noreferrer");
     clearCart();
     setConfirmed(true);
-    router.push(`/pedido-confirmado?order=${order.orderId}`);
+    router.push(`/pedido-confirmado?order=${encodeURIComponent(order.orderId)}`);
   }
 
+  const helpHref = buildWhatsAppLink(
+    siteConfig.whatsapp.phoneDigitsOnly,
+    `Hola Pixolve Agency 👋, necesito ayuda para pagar mi pedido ${order.orderId}.`
+  );
+
   return (
-    <Container className="max-w-3xl py-16">
-      <button
-        onClick={() => router.push("/checkout/brief")}
-        className="mb-6 flex items-center gap-1.5 text-sm font-medium text-muted hover:text-blue-600"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver al briefing
-      </button>
+    <Container className="py-12 sm:py-16">
+      <CheckoutSteps current={3} />
 
-      <h1 className="text-3xl font-extrabold tracking-tight text-heading">
-        Elige tu método de pago
-      </h1>
-      <p className="mt-2 text-body">
-        Pedido <span className="font-semibold">{order.orderId}</span> · Total
-        a pagar:{" "}
-        <span className="font-semibold text-heading">
-          {formatCurrency(totalDue)}
-        </span>
-        {order.totalMensual > 0 && " (incluye el primer mes de tu(s) servicio(s) recurrente(s))"}
-      </p>
-
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <button
-          onClick={() => setMethod("paypal")}
-          className={cn(
-            "rounded-2xl border-2 p-6 text-left transition-colors",
-            method === "paypal"
-              ? "border-blue-600 bg-blue-50 dark:bg-blue-500/10"
-              : "border-default hover:border-blue-300"
-          )}
-        >
-          <span className="text-lg font-bold text-heading">PayPal</span>
-          <p className="mt-1 text-sm text-body">
-            Paga con tu cuenta de PayPal o tarjeta asociada.
+      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px] lg:gap-10">
+        <div className="order-2 lg:order-1">
+          <Link href="/checkout/brief" className="-my-2 inline-flex items-center gap-1.5 py-2 text-sm font-medium text-muted transition-colors hover:text-white">
+            <ArrowLeft className="h-4 w-4" /> Volver al briefing
+          </Link>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-heading sm:text-4xl">Elige cómo pagar</h1>
+          <p className="mt-2 text-body">
+            Pedido <span className="font-mono font-semibold text-heading">{order.orderId}</span> · Total{" "}
+            <span className="font-semibold text-heading">{formatCurrency(totalDue)} USD</span>
           </p>
-        </button>
 
-        <button
-          onClick={() => setMethod("usdt")}
-          className={cn(
-            "rounded-2xl border-2 p-6 text-left transition-colors",
-            method === "usdt"
-              ? "border-blue-600 bg-blue-50 dark:bg-blue-500/10"
-              : "border-default hover:border-blue-300"
+          {/* Métodos de pago (radio nativo, accesible con teclado) */}
+          <fieldset className="mt-8">
+            <legend className="sr-only">Método de pago</legend>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {methods.map((option) => {
+                const selected = method === option.id;
+                return (
+                  <label
+                    key={option.id}
+                    className={cn(
+                      "relative flex cursor-pointer flex-col rounded-3xl border-2 p-6 transition-all duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-400",
+                      selected
+                        ? "border-brand-500 bg-brand-500/[0.07] shadow-[0_12px_40px_-16px_rgb(241_90_35/0.6)]"
+                        : "border-default bg-card hover:border-white/20"
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="payment-method"
+                      value={option.id}
+                      checked={selected}
+                      onChange={() => selectMethod(option.id)}
+                      className="sr-only"
+                    />
+                    <div className="flex items-start justify-between">
+                      <span
+                        className={cn(
+                          "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+                          selected ? "bg-brand-500 text-ink-950" : "bg-white/5 text-brand-400"
+                        )}
+                      >
+                        <option.icon className="h-5 w-5" />
+                      </span>
+                      <span
+                        className={cn(
+                          "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all",
+                          selected ? "border-brand-500 bg-brand-500 text-ink-950" : "border-ink-500"
+                        )}
+                      >
+                        {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+                      </span>
+                    </div>
+                    <span className="mt-5 font-display text-lg font-bold text-heading">{option.name}</span>
+                    <span className="mt-1 text-sm text-body">{option.description}</span>
+                    <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-body-strong ring-1 ring-white/10">
+                      <ShieldCheck className="h-3.5 w-3.5 text-brand-400" />
+                      {option.tag}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <AnimatePresence mode="wait">
+            {method && (
+              <motion.div
+                key={method}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-6 rounded-3xl border border-default bg-card p-6 sm:p-8"
+              >
+                <h2 className="text-lg font-bold text-heading">
+                  {method === "paypal" ? "Cómo pagar con PayPal" : "Cómo pagar con USDT (Binance Pay)"}
+                </h2>
+
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <CopyBox
+                    label="Monto a enviar"
+                    value={method === "paypal" ? `${totalDue} USD` : `${totalDue} USDT`}
+                    copied={copiedField === "amount"}
+                    onCopy={() => handleCopy("amount", String(totalDue))}
+                  />
+                  {method === "paypal" ? (
+                    <CopyBox
+                      label="Correo de PayPal"
+                      value={siteConfig.payments.paypal.email}
+                      copied={copiedField === "paypal"}
+                      onCopy={() => handleCopy("paypal", siteConfig.payments.paypal.email)}
+                    />
+                  ) : (
+                    <CopyBox
+                      label="Binance Pay ID"
+                      value={siteConfig.payments.usdt.binancePayId}
+                      copied={copiedField === "binance"}
+                      onCopy={() => handleCopy("binance", siteConfig.payments.usdt.binancePayId)}
+                    />
+                  )}
+                </div>
+
+                <ol className="mt-6 space-y-4">
+                  {(method === "paypal"
+                    ? [
+                        <>Abre PayPal (app o web) y envía <strong className="text-heading">{formatCurrency(totalDue)} USD</strong> al correo de arriba.</>,
+                        <>Elige la opción <strong className="text-heading">&quot;Pagar por bienes y servicios&quot;</strong> para contar con la protección al comprador.</>,
+                        <>Toma una captura de pantalla del comprobante de pago.</>,
+                      ]
+                    : [
+                        <>Abre tu app de Binance y ve a <strong className="text-heading">Pay → Enviar</strong>.</>,
+                        <>Busca el Pay ID de arriba y envía <strong className="text-heading">{totalDue} USDT</strong> (puede variar ligeramente según tu exchange).</>,
+                        <>Toma una captura de pantalla del comprobante de la transacción.</>,
+                      ]
+                  ).map((step, index) => (
+                    <li key={index} className="flex gap-3.5 text-sm leading-relaxed text-body">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-500/15 text-xs font-bold text-brand-300">
+                        {index + 1}
+                      </span>
+                      <span className="pt-1">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+
+                {method === "paypal" && siteConfig.payments.paypal.meLink && (
+                  <Button
+                    href={`${siteConfig.payments.paypal.meLink}/${totalDue}`}
+                    variant="secondary"
+                    className="mt-6"
+                    icon={<ExternalLink className="h-4 w-4" />}
+                    iconPosition="right"
+                  >
+                    Pagar {formatCurrency(totalDue)} con PayPal.Me
+                  </Button>
+                )}
+                {method === "usdt" && siteConfig.payments.usdt.walletAddress && (
+                  <p className="mt-5 break-all text-xs text-muted">
+                    ¿No usas Binance Pay? También puedes enviar USDT ({siteConfig.payments.usdt.network}) a:{" "}
+                    <span className="font-mono text-body-strong">{siteConfig.payments.usdt.walletAddress}</span>
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {method && (
+            <div className="mt-6 rounded-3xl border border-default bg-card p-6 sm:p-8">
+              <h2 className="text-lg font-bold text-heading">Confirma tu pedido</h2>
+              <div className="mt-5 space-y-3">
+                <CheckRow checked={paid} onChange={setPaid}>
+                  Ya envié el pago de <strong className="text-heading">{formatCurrency(totalDue)}</strong> por{" "}
+                  {method === "paypal" ? "PayPal" : "Binance Pay"} y tengo mi comprobante.
+                </CheckRow>
+                <CheckRow checked={accepted} onChange={setAccepted}>
+                  Acepto los{" "}
+                  <Link href="/terminos" target="_blank" className="font-medium text-brand-400 underline-offset-2 hover:underline">
+                    Términos y condiciones
+                  </Link>{" "}
+                  y la{" "}
+                  <Link href="/reembolsos" target="_blank" className="font-medium text-brand-400 underline-offset-2 hover:underline">
+                    Política de reembolsos
+                  </Link>
+                  .
+                </CheckRow>
+              </div>
+
+              <Button
+                onClick={handleConfirm}
+                fullWidth
+                size="lg"
+                variant="whatsapp"
+                className="mt-6"
+                icon={<MessageCircle className="h-5 w-5" />}
+                disabled={!canConfirm}
+              >
+                Confirmar pedido y enviar comprobante
+              </Button>
+              <p className="mt-3 text-center text-xs text-muted">
+                Se abrirá WhatsApp con el resumen de tu pedido para que adjuntes el comprobante.
+                Validamos tu pago en menos de 24 horas hábiles.
+              </p>
+            </div>
           )}
-        >
-          <span className="text-lg font-bold text-heading">
-            USDT (Binance Pay)
-          </span>
-          <p className="mt-1 text-sm text-body">
-            Paga en criptomonedas mediante transferencia USDT.
+
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-1.5 text-center text-sm text-muted">
+            <Lock className="h-4 w-4 text-brand-400" />
+            Nunca te pediremos datos de tarjeta ni contraseñas. ¿Dudas para pagar?
+            <a href={helpHref} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-400 hover:text-brand-300">
+              Escríbenos
+            </a>
           </p>
-        </button>
+        </div>
+
+        <OrderSummary
+          className="order-1 lg:order-2"
+          items={order.items}
+          totalUnico={order.totalUnico}
+          totalMensual={order.totalMensual}
+          orderId={order.orderId}
+        />
       </div>
-
-      {method === "paypal" && (
-        <div className="mt-6 rounded-2xl border border-default p-6">
-          <h2 className="font-bold text-heading">Instrucciones de pago con PayPal</h2>
-          <p className="mt-2 text-sm text-body">Correo de PayPal:</p>
-          <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-alt p-4">
-            <code className="break-all text-sm text-body-strong">
-              {siteConfig.payments.paypal.email}
-            </code>
-            <button
-              onClick={() => handleCopy("paypal", siteConfig.payments.paypal.email)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card text-body shadow-sm hover:text-blue-600"
-              aria-label="Copiar correo de PayPal"
-            >
-              {copiedField === "paypal" ? (
-                <Check className="h-4 w-4 text-emerald-600" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </button>
-          </div>
-          <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>
-              Abre PayPal (app o web) y envía{" "}
-              <span className="font-semibold">{formatCurrency(totalDue)}</span> al
-              correo de arriba, eligiendo la opción &quot;Pagar por bienes y
-              servicios&quot;.
-            </li>
-            <li>Toma una captura de pantalla del comprobante de pago.</li>
-            <li>
-              Presiona &quot;Confirmar pedido&quot; y adjunta el comprobante
-              en el chat de WhatsApp que se abrirá.
-            </li>
-          </ol>
-          {siteConfig.payments.paypal.meLink && (
-            <Button
-              href={`${siteConfig.payments.paypal.meLink}/${totalDue}`}
-              variant="secondary"
-              className="mt-5"
-            >
-              Pagar {formatCurrency(totalDue)} con PayPal.Me
-            </Button>
-          )}
-        </div>
-      )}
-
-      {method === "usdt" && (
-        <div className="mt-6 rounded-2xl border border-default p-6">
-          <h2 className="font-bold text-heading">
-            Instrucciones de pago con USDT (Binance Pay)
-          </h2>
-          <p className="mt-2 text-sm text-body">Binance Pay ID:</p>
-          <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-alt p-4">
-            <code className="break-all text-sm text-body-strong">
-              {siteConfig.payments.usdt.binancePayId}
-            </code>
-            <button
-              onClick={() => handleCopy("binance", siteConfig.payments.usdt.binancePayId)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card text-body shadow-sm hover:text-blue-600"
-              aria-label="Copiar Binance Pay ID"
-            >
-              {copiedField === "binance" ? (
-                <Check className="h-4 w-4 text-emerald-600" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </button>
-          </div>
-          <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>
-              Abre tu app de Binance, ve a{" "}
-              <span className="font-semibold">Pay → Enviar</span> y busca el
-              Pay ID de arriba.
-            </li>
-            <li>
-              Envía{" "}
-              <span className="font-semibold">{totalDue} USDT</span> (el
-              monto puede variar ligeramente según la tasa de tu exchange).
-            </li>
-            <li>Toma una captura de pantalla del comprobante de la transacción.</li>
-            <li>
-              Presiona &quot;Confirmar pedido&quot; y adjunta el comprobante
-              en el chat de WhatsApp que se abrirá.
-            </li>
-          </ol>
-          {siteConfig.payments.usdt.walletAddress && (
-            <p className="mt-3 text-xs text-muted">
-              ¿No usas Binance Pay? También puedes enviar USDT ({siteConfig.payments.usdt.network}) a:{" "}
-              <span className="font-medium text-body-strong">
-                {siteConfig.payments.usdt.walletAddress}
-              </span>
-            </p>
-          )}
-        </div>
-      )}
-
-      {method && (
-        <div className="mt-8 rounded-2xl bg-alt p-6">
-          <p className="flex items-center gap-2 text-sm text-body">
-            <ShieldCheck className="h-4 w-4 shrink-0 text-blue-600" />
-            Al confirmar, abriremos WhatsApp con el resumen de tu pedido para
-            que envíes tu comprobante y nuestro equipo valide tu pago en
-            menos de 24 horas hábiles.
-          </p>
-          <Button
-            onClick={handleConfirm}
-            fullWidth
-            variant="whatsapp"
-            className="mt-4"
-            icon={<MessageCircle className="h-4 w-4" />}
-            disabled={confirmed}
-          >
-            Confirmar pedido y enviar comprobante
-          </Button>
-        </div>
-      )}
     </Container>
+  );
+}
+
+function CopyBox({
+  label,
+  value,
+  copied,
+  onCopy,
+}: {
+  label: string;
+  value: string;
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-ink-800/60 p-4">
+      <div className="min-w-0">
+        <p className="text-xs text-muted">{label}</p>
+        <p className="mt-0.5 break-all font-mono text-[15px] font-semibold text-heading">{value}</p>
+      </div>
+      <button
+        type="button"
+        onClick={onCopy}
+        className={cn(
+          "flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all",
+          copied ? "bg-emerald-500/15 text-emerald-400" : "bg-white/5 text-body-strong hover:bg-brand-500 hover:text-ink-950"
+        )}
+        aria-label={`Copiar ${label}`}
+      >
+        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+        <span aria-live="polite">{copied ? "Copiado" : "Copiar"}</span>
+      </button>
+    </div>
+  );
+}
+
+function CheckRow({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label
+      className={cn(
+        "flex cursor-pointer items-start gap-3.5 rounded-2xl border p-4 text-sm leading-relaxed text-body transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-400",
+        checked ? "border-brand-500/50 bg-brand-500/[0.06]" : "border-default hover:border-white/20"
+      )}
+    >
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only" />
+      <span
+        aria-hidden
+        className={cn(
+          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all",
+          checked ? "border-brand-500 bg-brand-500 text-ink-950" : "border-ink-500"
+        )}
+      >
+        {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+      </span>
+      <span>{children}</span>
+    </label>
   );
 }

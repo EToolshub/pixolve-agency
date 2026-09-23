@@ -3,38 +3,37 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { FieldWrapper, Input, Select, Textarea } from "@/components/ui/Field";
 import { buildWhatsAppLink } from "@/lib/utils";
 import { siteConfig } from "@/data/site";
+import { services } from "@/data/services";
 
 const schema = z.object({
-  fullName: z.string().min(2, "Escribe tu nombre completo"),
-  email: z.string().email("Escribe un correo válido"),
-  phone: z.string().min(7, "Escribe un teléfono válido"),
+  fullName: z.string().trim().min(2, "Escribe tu nombre completo").max(80),
+  email: z.string().trim().email("Escribe un correo válido"),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d\s()-]{7,20}$/, "Incluye el código de país, por ejemplo +58 412 123 4567"),
   service: z.string().min(1, "Selecciona un servicio"),
-  message: z.string().min(10, "Cuéntanos un poco más sobre tu proyecto"),
+  message: z.string().trim().min(10, "Cuéntanos un poco más sobre tu proyecto").max(1500),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-const serviceOptions = [
-  "Diseño gráfico",
-  "Manejo de redes sociales",
-  "Diseño UI/UX",
-  "Creación de páginas web",
-  "Hosting y mantenimiento",
-  "Aún no lo sé / necesito orientación",
-];
+const serviceOptions = [...services.map((service) => service.name), "Aún no lo sé / necesito orientación"];
 
 export function ContactForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful, dirtyFields },
     reset,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    mode: "onTouched",
   });
 
   function onSubmit(data: FormValues) {
@@ -52,65 +51,25 @@ export function ContactForm() {
     reset();
   }
 
+  const ok = (field: keyof FormValues) => Boolean(dirtyFields[field]) && !errors[field];
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-body-strong">
-            Nombre completo
-          </label>
-          <input
-            {...register("fullName")}
-            type="text"
-            className="w-full rounded-xl border border-input px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="Tu nombre"
-          />
-          {errors.fullName && (
-            <p className="mt-1 text-xs text-red-600">{errors.fullName.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-body-strong">
-            Correo electrónico
-          </label>
-          <input
-            {...register("email")}
-            type="email"
-            className="w-full rounded-xl border border-input px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="tucorreo@ejemplo.com"
-          />
-          {errors.email && (
-            <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-          )}
-        </div>
+        <FieldWrapper id="c-fullName" label="Nombre completo" required error={errors.fullName?.message} valid={ok("fullName")}>
+          <Input id="c-fullName" autoComplete="name" placeholder="Tu nombre" invalid={errors.fullName?.message} valid={ok("fullName")} {...register("fullName")} />
+        </FieldWrapper>
+        <FieldWrapper id="c-email" label="Correo electrónico" required error={errors.email?.message} valid={ok("email")}>
+          <Input id="c-email" type="email" inputMode="email" autoComplete="email" placeholder="tucorreo@ejemplo.com" invalid={errors.email?.message} valid={ok("email")} {...register("email")} />
+        </FieldWrapper>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-body-strong">
-            Teléfono / WhatsApp
-          </label>
-          <input
-            {...register("phone")}
-            type="tel"
-            className="w-full rounded-xl border border-input px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            placeholder="+52 55 1234 5678"
-          />
-          {errors.phone && (
-            <p className="mt-1 text-xs text-red-600">{errors.phone.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-body-strong">
-            Servicio de interés
-          </label>
-          <select
-            {...register("service")}
-            defaultValue=""
-            className="w-full rounded-xl border border-input bg-card px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-          >
+        <FieldWrapper id="c-phone" label="Teléfono / WhatsApp" required error={errors.phone?.message} valid={ok("phone")}>
+          <Input id="c-phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+58 412 123 4567" invalid={errors.phone?.message} valid={ok("phone")} {...register("phone")} />
+        </FieldWrapper>
+        <FieldWrapper id="c-service" label="Servicio de interés" required error={errors.service?.message}>
+          <Select id="c-service" defaultValue="" invalid={errors.service?.message} {...register("service")}>
             <option value="" disabled>
               Selecciona una opción
             </option>
@@ -119,36 +78,22 @@ export function ContactForm() {
                 {option}
               </option>
             ))}
-          </select>
-          {errors.service && (
-            <p className="mt-1 text-xs text-red-600">{errors.service.message}</p>
-          )}
-        </div>
+          </Select>
+        </FieldWrapper>
       </div>
 
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-body-strong">
-          Cuéntanos sobre tu proyecto
-        </label>
-        <textarea
-          {...register("message")}
-          rows={4}
-          className="w-full rounded-xl border border-input px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-          placeholder="Describe brevemente lo que necesitas..."
-        />
-        {errors.message && (
-          <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>
-        )}
-      </div>
+      <FieldWrapper id="c-message" label="Cuéntanos sobre tu proyecto" required error={errors.message?.message} valid={ok("message")}>
+        <Textarea id="c-message" rows={5} placeholder="Describe brevemente lo que necesitas, tus plazos y tu presupuesto aproximado…" invalid={errors.message?.message} valid={ok("message")} {...register("message")} />
+      </FieldWrapper>
 
-      <Button type="submit" fullWidth icon={<Send className="h-4 w-4" />}>
+      <Button type="submit" fullWidth size="lg" icon={<Send className="h-4 w-4" />}>
         Enviar por WhatsApp
       </Button>
 
       {isSubmitSuccessful && (
-        <p className="text-center text-sm font-medium text-emerald-600">
-          Abrimos WhatsApp con tu mensaje. Si no se abrió, escríbenos
-          directamente al {siteConfig.whatsapp.displayNumber}.
+        <p role="status" className="flex items-center justify-center gap-2 text-center text-sm font-medium text-emerald-400">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          Abrimos WhatsApp con tu mensaje. Si no se abrió, escríbenos al {siteConfig.whatsapp.displayNumber}.
         </p>
       )}
     </form>

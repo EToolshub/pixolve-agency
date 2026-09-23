@@ -10,6 +10,7 @@ export function formatCurrency(amount: number) {
   return new Intl.NumberFormat("es-MX", {
     style: "currency",
     currency: "USD",
+    currencyDisplay: "narrowSymbol",
     minimumFractionDigits: hasCents ? 2 : 0,
     maximumFractionDigits: 2,
   }).format(amount);
@@ -20,7 +21,11 @@ export function generateOrderId() {
   const stamp = `${date.getFullYear().toString().slice(2)}${String(
     date.getMonth() + 1
   ).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`;
-  const random = Math.random().toString(36).slice(2, 6).toUpperCase();
+  // Sin 0/O/1/I para que el número sea fácil de dictar por WhatsApp.
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(4);
+  crypto.getRandomValues(bytes);
+  const random = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
   return `PIX-${stamp}-${random}`;
 }
 

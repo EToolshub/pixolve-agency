@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
+import { StatsBand } from "@/components/home/StatsBand";
 import { WhyUs } from "@/components/home/WhyUs";
 import { PortfolioPreview } from "@/components/home/PortfolioPreview";
 import { GoogleReviewsBanner } from "@/components/home/GoogleReviewsBanner";
@@ -11,10 +12,11 @@ export default function Home() {
     <>
       <Hero />
       <ServicesOverview />
+      <StatsBand />
       <WhyUs />
+      <ProcessPreview />
       <PortfolioPreview />
       <GoogleReviewsBanner />
-      <ProcessPreview />
       <CTASection />
     </>
   );

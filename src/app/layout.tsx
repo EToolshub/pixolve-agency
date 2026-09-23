@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { MotionProvider } from "@/components/layout/MotionProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/structured-data";
 import { siteConfig } from "@/data/site";
@@ -14,6 +17,12 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const homeTitle = `${siteConfig.name} | Agencia de Diseño Gráfico, UI/UX y Desarrollo Web`;
@@ -57,16 +66,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#020617" },
-  ],
+  colorScheme: "dark",
+  themeColor: "#0b0b0a",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${jakarta.variable} h-full antialiased`}>
+    <html lang="es" className={`${jakarta.variable} ${sora.variable} h-full antialiased`}>
       <head>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.googleAnalyticsId}`}
@@ -81,14 +88,26 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           `}
         </Script>
       </head>
-      <body className="flex min-h-full flex-col bg-surface text-heading">
+      <body className="flex min-h-full flex-col overflow-x-clip bg-surface text-heading">
+        <a
+          href="#contenido"
+          className="sr-only z-[90] rounded-full bg-brand-500 px-4 py-2 font-semibold text-ink-950 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Saltar al contenido
+        </a>
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
-        <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <WhatsAppFloatingButton />
-        </CartProvider>
+        <MotionProvider>
+          <CartProvider>
+            <ScrollProgress />
+            <Header />
+            <main id="contenido" className="flex-1">
+              {children}
+            </main>
+            <Footer />
+            <WhatsAppFloatingButton />
+            <CartDrawer />
+          </CartProvider>
+        </MotionProvider>
       </body>
     </html>
   );

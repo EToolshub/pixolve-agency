@@ -3,6 +3,11 @@ import type { Service } from "@/lib/types";
 // ─────────────────────────────────────────────────────────────────────────
 // Catálogo de servicios. Los precios son ejemplos profesionales de
 // referencia: ajústalos a tu mercado real antes de publicar.
+//
+// Cada servicio tiene su propia página en /servicios/[slug] que se arma con
+// estos datos: titular (headline), entregables (deliverables), pasos de
+// trabajo (steps), perfiles ideales (idealFor), paquetes y preguntas.
+// Los íconos son nombres registrados en src/lib/icon-map.ts.
 // ─────────────────────────────────────────────────────────────────────────
 
 export const services: Service[] = [
@@ -11,6 +16,9 @@ export const services: Service[] = [
     name: "Diseño Gráfico",
     shortName: "Diseño Gráfico",
     icon: "PenTool",
+    category: "Diseño",
+    headline: "Una marca que se reconoce al primer vistazo",
+    portfolioCategory: "Branding",
     shortDescription:
       "Identidad visual y piezas gráficas que comunican quién eres.",
     description:
@@ -19,6 +27,23 @@ export const services: Service[] = [
       "Logotipo y sistema de marca",
       "Manual de marca y guías de uso",
       "Piezas para redes, impresos y punto de venta",
+    ],
+    deliverables: [
+      { icon: "PenTool", title: "Logotipo profesional", description: "Propuestas originales diseñadas desde cero, pensadas para verse bien en cualquier tamaño y soporte." },
+      { icon: "Palette", title: "Paleta y tipografías", description: "Un sistema de color y tipografías coherente para que tu marca se vea igual en todos tus canales." },
+      { icon: "BookOpen", title: "Manual de marca", description: "Guía clara de uso del logo, colores y aplicaciones para que cualquier persona use tu marca correctamente." },
+      { icon: "Layers", title: "Archivos editables", description: "Recibes los archivos fuente (AI/Figma) y los formatos listos para usar: PNG, SVG y PDF." },
+    ],
+    steps: [
+      { title: "Brief de marca", description: "Nos cuentas quién eres, a quién le hablas y qué te diferencia, con un cuestionario guiado." },
+      { title: "Exploración creativa", description: "Investigamos tu sector y creamos propuestas de concepto con una dirección visual clara." },
+      { title: "Refinamiento", description: "Ajustamos la propuesta elegida contigo dentro de las rondas de revisión de tu paquete." },
+      { title: "Entrega final", description: "Te entregamos el logo, el sistema visual y todos los archivos organizados y listos para usar." },
+    ],
+    idealFor: [
+      "Emprendimientos que lanzan su marca",
+      "Negocios que necesitan un rebranding",
+      "Empresas que quieren unificar su imagen",
     ],
     packages: [
       {
@@ -90,6 +115,9 @@ export const services: Service[] = [
     name: "Manejo de Redes Sociales",
     shortName: "Redes Sociales",
     icon: "Megaphone",
+    category: "Marketing",
+    headline: "Redes sociales que construyen comunidad y ventas",
+    portfolioCategory: "Redes Sociales",
     shortDescription:
       "Gestión de contenido y comunidad para pymes y grandes empresas.",
     description:
@@ -98,6 +126,23 @@ export const services: Service[] = [
       "Estrategia de contenido y calendario editorial",
       "Diseño de piezas y producción audiovisual",
       "Community management y reportes de resultados",
+    ],
+    deliverables: [
+      { icon: "CalendarDays", title: "Calendario editorial", description: "Planificación mensual de contenido alineada a tus objetivos, fechas clave y lanzamientos." },
+      { icon: "Video", title: "Diseño y reels", description: "Piezas gráficas y videos de formato corto con la identidad de tu marca, listos para publicar." },
+      { icon: "MessagesSquare", title: "Community management", description: "Respondemos comentarios y mensajes para que tu comunidad se sienta escuchada." },
+      { icon: "ChartColumn", title: "Reportes de resultados", description: "Métricas claras y recomendaciones accionables para mejorar mes a mes." },
+    ],
+    steps: [
+      { title: "Diagnóstico", description: "Revisamos tus redes actuales y tu competencia, y definimos objetivos medibles." },
+      { title: "Estrategia", description: "Creamos pilares de contenido, tono de voz y el calendario del primer mes." },
+      { title: "Producción y publicación", description: "Diseñamos, programamos y publicamos tu contenido con tu aprobación previa." },
+      { title: "Medición y mejora", description: "Analizamos resultados y ajustamos la estrategia en cada ciclo." },
+    ],
+    idealFor: [
+      "Pymes sin tiempo para publicar",
+      "Marcas que quieren vender por redes",
+      "Empresas con operación multicanal",
     ],
     packages: [
       {
@@ -168,6 +213,9 @@ export const services: Service[] = [
     name: "Diseño UI/UX",
     shortName: "UI/UX",
     icon: "LayoutPanelTop",
+    category: "Diseño",
+    headline: "Interfaces que se entienden sin instrucciones",
+    portfolioCategory: "UI/UX",
     shortDescription: "Interfaces claras y experiencias que convierten.",
     description:
       "Diseñamos productos digitales centrados en el usuario: research, wireframes, prototipos interactivos y una interfaz final pulida y lista para desarrollo.",
@@ -175,6 +223,23 @@ export const services: Service[] = [
       "Investigación de usuarios y arquitectura de información",
       "Wireframes y prototipos interactivos en Figma",
       "Sistemas de diseño escalables",
+    ],
+    deliverables: [
+      { icon: "ScanSearch", title: "Research de usuarios", description: "Entendemos a tus usuarios y sus problemas antes de dibujar una sola pantalla." },
+      { icon: "Workflow", title: "Arquitectura y wireframes", description: "Flujos claros y una estructura de información que reduce la fricción." },
+      { icon: "MousePointerClick", title: "Prototipo interactivo", description: "Un prototipo navegable en Figma para validar la experiencia antes de desarrollar." },
+      { icon: "Blocks", title: "Sistema de diseño", description: "Componentes reutilizables y documentados que aceleran a tu equipo de desarrollo." },
+    ],
+    steps: [
+      { title: "Descubrimiento", description: "Definimos objetivos de negocio, usuarios y métricas de éxito del producto." },
+      { title: "Wireframes", description: "Diseñamos la estructura y los flujos principales en baja fidelidad." },
+      { title: "UI y prototipo", description: "Aplicamos la interfaz final y armamos un prototipo navegable de alta fidelidad." },
+      { title: "Handoff", description: "Entregamos especificaciones y componentes listos para que tu equipo implemente." },
+    ],
+    idealFor: [
+      "Startups validando un MVP",
+      "Empresas rediseñando su app o plataforma",
+      "Equipos de producto que necesitan un design system",
     ],
     packages: [
       {
@@ -240,7 +305,10 @@ export const services: Service[] = [
     slug: "paginas-web",
     name: "Creación de Páginas Web",
     shortName: "Páginas Web",
-    icon: "Globe2",
+    icon: "Globe",
+    category: "Desarrollo",
+    headline: "Sitios web rápidos, seguros y hechos para vender",
+    portfolioCategory: "UI/UX",
     shortDescription: "Sitios y tiendas online rápidas, seguras y a tu medida.",
     description:
       "Construimos sitios web y tiendas en línea modernas, optimizadas para conversión y velocidad, desde un sitio informativo hasta una plataforma e-commerce a medida.",
@@ -248,6 +316,23 @@ export const services: Service[] = [
       "Diseño responsive y optimizado para SEO",
       "Tiendas en línea con pasarelas de pago",
       "Integraciones a medida (CRM, APIs, ERPs)",
+    ],
+    deliverables: [
+      { icon: "Smartphone", title: "Diseño responsive", description: "Tu sitio se ve y funciona perfecto en celulares, tablets y computadoras." },
+      { icon: "Gauge", title: "Velocidad y SEO", description: "Optimizado para cargar rápido y aparecer en Google desde el primer día." },
+      { icon: "Store", title: "Tienda y pagos", description: "Catálogo, carrito y pasarelas de pago integradas para vender en línea." },
+      { icon: "CodeXml", title: "Integraciones", description: "Conectamos tu sitio con CRM, APIs, ERPs y herramientas de marketing." },
+    ],
+    steps: [
+      { title: "Planificación", description: "Definimos objetivos, páginas, contenido y funcionalidades del sitio." },
+      { title: "Diseño", description: "Diseñamos la experiencia y la interfaz con tu identidad de marca." },
+      { title: "Desarrollo", description: "Construimos el sitio con código limpio, rápido y seguro." },
+      { title: "Lanzamiento", description: "Publicamos, probamos todo y te capacitamos para administrarlo." },
+    ],
+    idealFor: [
+      "Negocios sin presencia web",
+      "Marcas que quieren vender en línea",
+      "Empresas con procesos que integrar",
     ],
     packages: [
       {
@@ -312,6 +397,8 @@ export const services: Service[] = [
     name: "Hosting y Mantenimiento",
     shortName: "Hosting",
     icon: "Server",
+    category: "Desarrollo",
+    headline: "Tu sitio siempre en línea, sin preocupaciones técnicas",
     shortDescription: "Tu sitio siempre disponible, rápido y respaldado.",
     description:
       "Alojamos y mantenemos tu sitio o tienda en línea con monitoreo, respaldos automáticos y soporte técnico, para que tú te enfoques en tu negocio.",
@@ -319,6 +406,23 @@ export const services: Service[] = [
       "Certificado SSL y monitoreo de disponibilidad",
       "Respaldos automáticos",
       "Soporte técnico continuo",
+    ],
+    deliverables: [
+      { icon: "Lock", title: "Certificado SSL", description: "Conexión cifrada (HTTPS) incluida para proteger a tus visitantes y mejorar tu SEO." },
+      { icon: "HardDrive", title: "Respaldos automáticos", description: "Copias de seguridad periódicas para recuperar tu sitio ante cualquier imprevisto." },
+      { icon: "Gauge", title: "Monitoreo y velocidad", description: "Vigilamos la disponibilidad y el rendimiento de tu sitio de forma continua." },
+      { icon: "LifeBuoy", title: "Soporte técnico", description: "Un equipo real que resuelve incidencias y actualizaciones por ti." },
+    ],
+    steps: [
+      { title: "Evaluación", description: "Revisamos tu sitio actual y elegimos el plan adecuado a tu tráfico." },
+      { title: "Migración", description: "Movemos tu sitio sin pérdida de datos y con el menor tiempo fuera de línea." },
+      { title: "Configuración", description: "Activamos SSL, respaldos, monitoreo y optimizaciones de velocidad." },
+      { title: "Soporte continuo", description: "Mantenemos tu sitio actualizado y te atendemos cuando lo necesites." },
+    ],
+    idealFor: [
+      "Sitios informativos y landing pages",
+      "Tiendas en línea con tráfico constante",
+      "Empresas que necesitan alta disponibilidad",
     ],
     packages: [
       {
@@ -382,4 +486,8 @@ export function getServiceBySlug(slug: string) {
 
 export function getStartingPrice(service: Service) {
   return Math.min(...service.packages.map((pkg) => pkg.price));
+}
+
+export function getStartingPackage(service: Service) {
+  return service.packages.reduce((min, pkg) => (pkg.price < min.price ? pkg : min));
 }
