@@ -15,6 +15,8 @@ import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCart } from "@/context/CartContext";
 import { generateOrderId } from "@/lib/utils";
 import { getPendingOrder, savePendingOrder } from "@/lib/order-storage";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 const countries = [
   "Argentina",
@@ -57,6 +59,8 @@ type FormValues = z.infer<typeof schema>;
 export function CheckoutView() {
   const router = useRouter();
   const { items, totalUnico, totalMensual, isHydrated } = useCart();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const {
     register,
@@ -71,11 +75,34 @@ export function CheckoutView() {
     }
   }, [isHydrated, items.length, router]);
 
-  // Si el cliente vuelve atrás, recupera los datos que ya había escrito.
+  // Si el cliente vuelve atrás, recupera los datos que ya había escrito; si
+  // no, y tiene sesión iniciada, completa con los datos de su cuenta.
   useEffect(() => {
     const pending = getPendingOrder();
-    if (pending?.customer) reset(pending.customer);
-  }, [reset]);
+    if (pending?.customer) {
+      reset(pending.customer);
+      return;
+    }
+    if (!userId) return;
+    let active = true;
+    supabase
+      .from("profiles")
+      .select("full_name, email, phone")
+      .eq("id", userId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active || !data) return;
+        reset((current) => ({
+          ...current,
+          fullName: current.fullName || data.full_name || "",
+          email: current.email || data.email || "",
+          phone: current.phone || data.phone || "",
+        }));
+      });
+    return () => {
+      active = false;
+    };
+  }, [reset, userId]);
 
   function onSubmit(data: FormValues) {
     const stored = getPendingOrder();

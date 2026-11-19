@@ -75,6 +75,56 @@ Para ver o exportar los correos, entra al
 [panel de Supabase](https://supabase.com/dashboard/project/gqjptrcvkbzotzserdop/editor)
 → tabla `subscribers`.
 
+## Cuentas de clientes y panel de administrador
+
+- **`/cuenta`** — cuadro de registro e inicio de sesión (Supabase Auth, correo
+  + contraseña). Con sesión iniciada, el cliente ve sus pedidos y su estado,
+  edita su nombre y WhatsApp, y el checkout se le completa solo. El ícono de
+  persona del menú lleva aquí.
+- **`/admin`** — panel solo para administradores: pedidos (con su briefing,
+  botón de WhatsApp/correo y cambio de estado), clientes registrados y
+  suscriptores (con exportación a CSV). Avisa si un pedido trae precios que
+  no coinciden con el catálogo.
+- Cada pedido confirmado se guarda en la tabla `orders` además de enviarse
+  por WhatsApp y correo. Si Supabase falla, el checkout sigue funcionando.
+
+Tablas, triggers y reglas de seguridad (RLS) están en
+[`supabase/migrations/`](supabase/migrations/). La seguridad vive en la base
+de datos: un cliente solo ve sus propios pedidos, no puede cambiar su estado
+ni hacerse admin, aunque manipule el código de la página.
+
+### Dar acceso de administrador
+
+El panel no tiene una contraseña aparte: es tu cuenta normal con permiso de
+admin. Regístrate en `/cuenta` y luego, en Supabase → **SQL Editor**, ejecuta
+(cambiando el correo):
+
+```sql
+insert into public.admins (user_id)
+select id from auth.users where email = 'tu-correo@ejemplo.com';
+```
+
+Para quitar el acceso: `delete from public.admins where user_id = (select id from auth.users where email = '...');`
+
+### Configuración necesaria en Supabase (una sola vez)
+
+1. **Authentication → URL Configuration**: *Site URL* =
+   `https://pixolve-agency.vercel.app` (o tu dominio) y en *Redirect URLs*
+   agrega `https://pixolve-agency.vercel.app/**` y `http://localhost:3000/**`.
+   Sin esto, los enlaces de confirmación y de "olvidé mi contraseña" apuntan
+   a `localhost`.
+2. **Authentication → Emails → SMTP Settings**: el servidor de correo gratis
+   de Supabase **solo envía a los miembros de tu equipo**, así que tus
+   clientes no recibirían el correo de confirmación y el registro fallaría.
+   Activa *Custom SMTP* con Gmail: host `smtp.gmail.com`, puerto `465`,
+   usuario `pixolveagency@gmail.com` y la misma contraseña de aplicación de
+   16 caracteres de la sección de abajo. (Alternativa rápida pero menos
+   segura: desactivar *Confirm email* en Authentication → Providers → Email.)
+
+> El plan gratis de Supabase **pausa el proyecto tras 7 días sin actividad**
+> y entonces ni el registro ni la suscripción funcionan. Si pasa, entra al
+> panel de Supabase y pulsa *Restore project*.
+
 ## Notificación de pedidos por correo
 
 Cada vez que un cliente confirma un pedido, `POST /api/notify-order`
@@ -124,7 +174,7 @@ npm start
 src/
   app/            Páginas (App Router)
   components/     Componentes de UI, layout, servicios, checkout, etc.
-  context/        Contexto del carrito de compras (React Context + localStorage)
+  context/        Carrito de compras (localStorage) y sesión del usuario (Supabase Auth)
   data/           Contenido editable (servicios, FAQ, proceso, config del sitio)
   lib/            Utilidades (formato de moneda, enlaces de WhatsApp, etc.)
 ```

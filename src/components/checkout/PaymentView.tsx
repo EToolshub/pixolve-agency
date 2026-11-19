@@ -20,8 +20,9 @@ import { Button } from "@/components/ui/Button";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { cn, formatCurrency, buildWhatsAppLink } from "@/lib/utils";
-import { getPendingOrder, savePendingOrder, type PendingOrder } from "@/lib/order-storage";
+import { getPendingOrder, saveOrderToDatabase, savePendingOrder, type PendingOrder } from "@/lib/order-storage";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { siteConfig } from "@/data/site";
 import { briefQuestions } from "@/data/briefs";
 import type { PaymentMethod } from "@/lib/types";
@@ -54,6 +55,7 @@ const methods: {
 export function PaymentView() {
   const router = useRouter();
   const { clearCart } = useCart();
+  const { user } = useAuth();
   const [order, setOrder] = useState<PendingOrder | null>(null);
   const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [paid, setPaid] = useState(false);
@@ -103,6 +105,12 @@ export function PaymentView() {
       confirmedAt: new Date().toISOString(),
     };
     savePendingOrder(finalOrder);
+
+    // Registro del pedido en Supabase para el panel de administrador (y en
+    // "Mi cuenta" si el cliente tiene sesión). No bloquea el checkout si falla.
+    saveOrderToDatabase(finalOrder, user?.id ?? null).catch(() => {
+      // sin conexión: el pedido sigue llegando por WhatsApp y correo
+    });
 
     // Aviso por correo a la agencia; no bloquea el checkout si falla.
     fetch("/api/notify-order", {

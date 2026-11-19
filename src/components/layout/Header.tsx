@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronDown, Menu, MessageCircle, ShoppingBag, X } from "lucide-react";
+import { ArrowRight, ChevronDown, LayoutDashboard, Menu, MessageCircle, ShoppingBag, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/brand/Logo";
 import { navLinks, siteConfig } from "@/data/site";
@@ -12,6 +12,7 @@ import { services, getStartingPrice } from "@/data/services";
 import { iconMap } from "@/lib/icon-map";
 import { buildWhatsAppLink, cn, formatCurrency } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 const desktopLinks = navLinks.filter((link) => link.href !== "/" && link.href !== "/servicios");
 
@@ -25,6 +26,7 @@ export function Header() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { count, openCart } = useCart();
+  const { user, isAdmin } = useAuth();
   const servicesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -174,6 +176,33 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Link
+              href="/admin"
+              aria-label="Panel de administrador"
+              title="Panel de administrador"
+              className={cn(
+                "hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-white/10 sm:flex",
+                isActive(pathname, "/admin") ? "text-brand-400" : "text-heading"
+              )}
+            >
+              <LayoutDashboard className="h-5 w-5" />
+            </Link>
+          )}
+          <Link
+            href="/cuenta"
+            aria-label={user ? "Mi cuenta" : "Iniciar sesión o crear cuenta"}
+            title={user ? "Mi cuenta" : "Iniciar sesión"}
+            className={cn(
+              "relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-white/10",
+              isActive(pathname, "/cuenta") ? "text-brand-400" : "text-heading"
+            )}
+          >
+            <UserRound className="h-5 w-5" />
+            {user && (
+              <span aria-hidden className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-ink-950" />
+            )}
+          </Link>
           <CartButton count={count} onClick={openCart} />
           <Button href="/servicios" size="sm" className="hidden lg:inline-flex" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
             Empezar proyecto
@@ -253,6 +282,14 @@ export function Header() {
               <div className="mt-8 grid gap-3">
                 <Button href="/servicios" fullWidth size="lg">
                   Empezar proyecto
+                </Button>
+                {isAdmin && (
+                  <Button href="/admin" variant="secondary" fullWidth size="lg" icon={<LayoutDashboard className="h-5 w-5" />}>
+                    Panel de administrador
+                  </Button>
+                )}
+                <Button href="/cuenta" variant="secondary" fullWidth size="lg" icon={<UserRound className="h-5 w-5" />}>
+                  {user ? "Mi cuenta" : "Iniciar sesión / Crear cuenta"}
                 </Button>
                 <Button href={whatsappHref} variant="secondary" fullWidth size="lg" icon={<MessageCircle className="h-5 w-5" />}>
                   Escribir por WhatsApp

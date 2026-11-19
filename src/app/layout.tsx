@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
@@ -97,16 +98,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
         <MotionProvider>
-          <CartProvider>
-            <ScrollProgress />
-            <Header />
-            <main id="contenido" className="flex-1">
-              {children}
-            </main>
-            <Footer />
-            <WhatsAppFloatingButton />
-            <CartDrawer />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <ScrollProgress />
+              <Header />
+              <main id="contenido" className="flex-1">
+                {children}
+              </main>
+              <Footer />
+              <WhatsAppFloatingButton />
+              <CartDrawer />
+            </CartProvider>
+          </AuthProvider>
         </MotionProvider>
       </body>
     </html>
