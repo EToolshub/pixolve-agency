@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
+  AlertTriangle,
   ArrowRight,
   BellRing,
   Check,
@@ -39,6 +40,9 @@ export function AccountView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = safeNextPath(searchParams.get("next"));
+  // Resultado de un enlace de correo (ver AuthContext): "confirmado" o un código de error.
+  const linkResult = searchParams.get("enlace");
+  const linkError = linkResult && linkResult !== "confirmado" ? linkResult : null;
 
   // Tras iniciar sesión, vuelve a la página que la pidió (p. ej. /admin).
   useEffect(() => {
@@ -52,6 +56,16 @@ export function AccountView() {
   if (!user) {
     return (
       <Container className="py-12 sm:py-20">
+        {linkError && (
+          <div role="alert" className="mb-8 flex gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/[0.07] p-4 text-sm text-amber-200">
+            <AlertTriangle className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-400" />
+            <p>
+              {linkError === "otp_expired"
+                ? "Ese enlace ya se usó o venció. Si ya confirmaste tu cuenta, solo inicia sesión. Si no, intenta iniciar sesión y te ofreceremos reenviar el correo de confirmación."
+                : "No pudimos validar el enlace del correo. Inicia sesión o pide uno nuevo."}
+            </p>
+          </div>
+        )}
         {/* Móvil: título → cuadro de registro → beneficios. Escritorio: dos columnas. */}
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_460px] lg:gap-x-16 lg:gap-y-10">
           <div className="lg:col-start-1 lg:row-start-1 lg:pt-6">
@@ -63,7 +77,7 @@ export function AccountView() {
               Crea tu cuenta gratis en menos de un minuto. No necesitas tarjeta.
             </p>
           </div>
-          <AuthCard initialMode={next ? "ingreso" : "registro"} className="lg:col-start-2 lg:row-span-2 lg:row-start-1" />
+          <AuthCard initialMode={next || linkError ? "ingreso" : "registro"} className="lg:col-start-2 lg:row-span-2 lg:row-start-1" />
           <div className="lg:col-start-1 lg:row-start-2">
             <ul className="space-y-6">
               {benefits.map(({ icon: Icon, title, text }) => (
@@ -84,10 +98,10 @@ export function AccountView() {
     );
   }
 
-  return <Dashboard />;
+  return <Dashboard justConfirmed={linkResult === "confirmado"} />;
 }
 
-function Dashboard() {
+function Dashboard({ justConfirmed }: { justConfirmed: boolean }) {
   const { user, isAdmin, signOut } = useAuth();
   // undefined = cargando · null = sin perfil
   const [profile, setProfile] = useState<Profile | null | undefined>(undefined);
@@ -136,6 +150,12 @@ function Dashboard() {
           </Button>
         </div>
       </div>
+
+      {justConfirmed && (
+        <p className="mt-6 flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] p-4 text-sm text-emerald-300">
+          <Check className="h-4.5 w-4.5 shrink-0" /> ¡Listo! Tu cuenta quedó confirmada y ya iniciaste sesión.
+        </p>
+      )}
 
       {loadError && (
         <p role="alert" className="mt-6 rounded-2xl border border-red-500/30 bg-red-500/[0.07] p-4 text-sm text-red-300">

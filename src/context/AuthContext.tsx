@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { authRedirect, supabase } from "@/lib/supabase";
 
 type AuthContextValue = {
   user: User | null;
@@ -41,6 +42,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data.subscription.unsubscribe();
     };
   }, []);
+
+  // Al llegar desde un enlace de correo (que puede caer en cualquier página,
+  // p. ej. el inicio), lleva al cliente al lugar correcto con un aviso claro.
+  const router = useRouter();
+  const redirectHandled = useRef(false);
+
+  useEffect(() => {
+    const target = authRedirect;
+    if (!target || redirectHandled.current) return;
+    redirectHandled.current = true;
+    // getSession espera a que supabase-js termine de leer el token del enlace;
+    // cambiar la URL antes haría que se perdiera la sesión.
+    supabase.auth.getSession().then(() => {
+      if (target.kind === "error") {
+        router.replace(`/cuenta?enlace=${encodeURIComponent(target.code)}`);
+      } else if (target.type === "recovery") {
+        if (window.location.pathname !== "/cuenta/nueva-clave") router.replace("/cuenta/nueva-clave");
+      } else {
+        router.replace("/cuenta?enlace=confirmado");
+      }
+    });
+  }, [router]);
 
   const userId = user?.id;
 
