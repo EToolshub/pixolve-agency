@@ -99,7 +99,7 @@ export function Header() {
               aria-controls="menu-servicios"
               onClick={() => setServicesOpen((v) => !v)}
               className={cn(
-                "relative flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                "relative flex items-center gap-1 rounded-full px-2.5 py-2 text-sm font-medium transition-colors xl:px-3 2xl:px-4",
                 isActive(pathname, "/servicios") ? "text-white" : "text-body hover:text-white"
               )}
             >
@@ -164,7 +164,7 @@ export function Header() {
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                  "relative rounded-full px-2.5 py-2 text-sm font-medium transition-colors xl:px-3 2xl:px-4",
                   active ? "text-white" : "text-body hover:text-white"
                 )}
               >
@@ -182,7 +182,8 @@ export function Header() {
               aria-label="Panel de administrador"
               title="Panel de administrador"
               className={cn(
-                "hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-white/10 sm:flex",
+                // Solo en tableta: junto al menú de escritorio no cabe; ahí se entra desde "Mi cuenta".
+                "hidden h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-white/10 sm:flex lg:hidden",
                 isActive(pathname, "/admin") ? "text-brand-400" : "text-heading"
               )}
             >
