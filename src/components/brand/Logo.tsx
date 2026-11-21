@@ -19,6 +19,7 @@ export function Logo({
       src={LOGO.src}
       width={LOGO.width}
       height={LOGO.height}
+      sizes="(max-width: 640px) 160px, 240px"
       alt="Pixolve Agency"
       priority={priority}
       className={cn("h-9 w-auto", className)}
@@ -41,6 +42,7 @@ export function LogoMark({
       src={MARK.src}
       width={MARK.width}
       height={MARK.height}
+      sizes="(max-width: 640px) 140px, 320px"
       alt={decorative ? "" : "Pixolve Agency"}
       aria-hidden={decorative || undefined}
       priority={priority}

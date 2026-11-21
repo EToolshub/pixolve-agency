@@ -43,10 +43,10 @@
   --surface-header: rgb(11 11 10 / 0.72);
 
   --text-heading: #f7f7f5;
-  --text-body: #b4b4ae;
-  --text-body-strong: #d9d9d4;
-  --text-muted: #93938c;
-  --text-subtle: #6f6f69;
+  --text-body: #b8b8b2;
+  --text-body-strong: #deded9;
+  --text-muted: #9e9e97;
+  --text-subtle: #8b8b84;
 
   --border-default: #262624;
   --border-default-80: rgb(255 255 255 / 0.07);

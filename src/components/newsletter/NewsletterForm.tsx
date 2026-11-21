@@ -48,6 +48,8 @@ export function NewsletterForm({
     <div className={className}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-full sm:flex-row sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-1.5">
         <input
+          id={`newsletter-${source}`}
+          name="email"
           type="email"
           required
           value={email}
