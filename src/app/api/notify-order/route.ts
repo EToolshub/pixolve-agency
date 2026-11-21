@@ -162,37 +162,117 @@ function buildEmailHtml(order: OrderPayload, amountMismatch: boolean) {
   `;
 }
 
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_MAX_REQUESTS = 5;
+const DEDUP_WINDOW_MS = 15 * 60 * 1000;
+const MAX_BODY_BYTES = 50_000;
+
+const ipBuckets = new Map<string, number[]>();
+const recentOrders = new Map<string, number>();
+
+function getClientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const hits = (ipBuckets.get(ip) ?? []).filter((ts) => now - ts < RATE_WINDOW_MS);
+  if (hits.length >= RATE_MAX_REQUESTS) {
+    ipBuckets.set(ip, hits);
+    return true;
+  }
+  hits.push(now);
+  ipBuckets.set(ip, hits);
+  if (ipBuckets.size > 1000) {
+    for (const [key, timestamps] of ipBuckets) {
+      if (timestamps.every((ts) => now - ts >= RATE_WINDOW_MS)) ipBuckets.delete(key);
+    }
+  }
+  return false;
+}
+
+function isDuplicateOrder(orderId: string): boolean {
+  const now = Date.now();
+  const prev = recentOrders.get(orderId);
+  if (prev && now - prev < DEDUP_WINDOW_MS) return true;
+  recentOrders.set(orderId, now);
+  if (recentOrders.size > 500) {
+    for (const [key, ts] of recentOrders) {
+      if (now - ts >= DEDUP_WINDOW_MS) recentOrders.delete(key);
+    }
+  }
+  return false;
+}
+
+function isSameOrigin(request: Request): boolean {
+  const host = request.headers.get("host");
+  if (!host) return false;
+  const source = request.headers.get("origin") ?? request.headers.get("referer");
+  if (!source) return process.env.NODE_ENV !== "production";
+  try {
+    return new URL(source).host === host;
+  } catch {
+    return false;
+  }
+}
+
+function jsonNoStore(data: Record<string, unknown>, status = 200) {
+  return NextResponse.json(data, {
+    status,
+    headers: { "Cache-Control": "no-store" },
+  });
+}
+
 export async function POST(request: Request) {
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
   // Solo aceptamos peticiones hechas desde el propio sitio.
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) {
-    return NextResponse.json({ sent: false, reason: "forbidden" }, { status: 403 });
+  if (!isSameOrigin(request)) {
+    return jsonNoStore({ sent: false, reason: "forbidden" }, 403);
+  }
+
+  if (isRateLimited(getClientIp(request))) {
+    return jsonNoStore({ sent: false, reason: "rate_limited" }, 429);
   }
 
   const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 50_000) {
-    return NextResponse.json({ sent: false, reason: "too_large" }, { status: 413 });
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonNoStore({ sent: false, reason: "too_large" }, 413);
+  }
+
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return jsonNoStore({ sent: false, reason: "invalid_body" }, 400);
+  }
+
+  if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
+    return jsonNoStore({ sent: false, reason: "too_large" }, 413);
   }
 
   let body: unknown;
   try {
-    body = await request.json();
+    body = JSON.parse(rawBody);
   } catch {
-    return NextResponse.json({ sent: false, reason: "invalid_body" }, { status: 400 });
+    return jsonNoStore({ sent: false, reason: "invalid_body" }, 400);
   }
 
   const parsed = orderSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ sent: false, reason: "invalid_order" }, { status: 400 });
+    return jsonNoStore({ sent: false, reason: "invalid_order" }, 400);
+  }
+
+  if (isDuplicateOrder(parsed.data.orderId)) {
+    return jsonNoStore({ sent: true, deduplicated: true });
   }
 
   const order = withCatalogPrices(parsed.data);
   if (!order) {
-    return NextResponse.json({ sent: false, reason: "unknown_items" }, { status: 400 });
+    return jsonNoStore({ sent: false, reason: "unknown_items" }, 400);
   }
   const amountMismatch =
     order.totalUnico !== parsed.data.totalUnico || order.totalMensual !== parsed.data.totalMensual;
@@ -201,7 +281,7 @@ export async function POST(request: Request) {
     console.warn(
       "notify-order: GMAIL_USER/GMAIL_APP_PASSWORD no configurados; se omite el envío de correo."
     );
-    return NextResponse.json({ sent: false, reason: "not_configured" }, { status: 200 });
+    return jsonNoStore({ sent: false, reason: "not_configured" });
   }
 
   try {
@@ -218,9 +298,9 @@ export async function POST(request: Request) {
       html: buildEmailHtml(order, amountMismatch),
     });
 
-    return NextResponse.json({ sent: true });
+    return jsonNoStore({ sent: true });
   } catch (error) {
     console.error("notify-order: fallo al enviar el correo", error);
-    return NextResponse.json({ sent: false, reason: "send_failed" }, { status: 200 });
+    return jsonNoStore({ sent: false, reason: "send_failed" });
   }
 }

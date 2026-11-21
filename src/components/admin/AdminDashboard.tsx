@@ -642,7 +642,8 @@ function SubscribersTab({ subscribers, onRemove }: { subscribers: Subscriber[]; 
   const visible = subscribers.filter((s) => !q || s.email.toLowerCase().includes(q));
 
   function exportCsv() {
-    const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const sanitize = (v: string) => (/^[=+\-@\t\r]/.test(v) ? `'${v}` : v);
+    const escape = (v: string) => `"${sanitize(v).replace(/"/g, '""')}"`;
     const rows = [
       ["correo", "origen", "fecha"],
       ...subscribers.map((s) => [s.email, s.source ?? "", s.created_at]),

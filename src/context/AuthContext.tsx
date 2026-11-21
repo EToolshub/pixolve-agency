@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { authRedirect, supabase } from "@/lib/supabase";
@@ -89,9 +89,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const adminLoading = Boolean(userId) && adminCheck?.userId !== userId;
   const isAdmin = Boolean(userId) && adminCheck?.userId === userId && Boolean(adminCheck?.isAdmin);
+  const loading = sessionLoading || adminLoading;
+
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, loading, isAdmin, signOut }),
+    [user, loading, isAdmin, signOut]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, loading: sessionLoading || adminLoading, isAdmin, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

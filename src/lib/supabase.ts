@@ -2,9 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 
 // La URL y la clave pública ("publishable") están pensadas para exponerse
 // en el cliente: el acceso real está protegido por Row Level Security en
-// Supabase (ver supabase/migrations/).
-const SUPABASE_URL = "https://gqjptrcvkbzotzserdop.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dstVrKuYhGngxh4wQisgpg_yvx4XEST";
+// Supabase (ver supabase/migrations/). Permiten sobrescribirse con variables
+// NEXT_PUBLIC_* para entornos de desarrollo o staging.
+const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://gqjptrcvkbzotzserdop.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  "sb_publishable_dstVrKuYhGngxh4wQisgpg_yvx4XEST";
 
 export type AuthRedirect =
   | { kind: "error"; code: string }

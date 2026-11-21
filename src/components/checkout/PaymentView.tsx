@@ -20,11 +20,17 @@ import { Button } from "@/components/ui/Button";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { cn, formatCurrency, buildWhatsAppLink } from "@/lib/utils";
-import { getPendingOrder, saveOrderToDatabase, savePendingOrder, type PendingOrder } from "@/lib/order-storage";
+import {
+  buildOrderWhatsAppMessage,
+  getPendingOrder,
+  reconcilePendingOrder,
+  saveOrderToDatabase,
+  savePendingOrder,
+  type PendingOrder,
+} from "@/lib/order-storage";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { siteConfig } from "@/data/site";
-import { briefQuestions } from "@/data/briefs";
 import type { PaymentMethod } from "@/lib/types";
 
 type CopyField = "binance" | "wallet" | "paypal" | "amount";
@@ -60,6 +66,7 @@ export function PaymentView() {
   const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [paid, setPaid] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [copiedField, setCopiedField] = useState<CopyField | null>(null);
 
@@ -69,15 +76,16 @@ export function PaymentView() {
       router.replace("/carrito");
       return;
     }
+    const normalized = reconcilePendingOrder(pending);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hidratación desde localStorage al montar
-    setOrder(pending);
-    if (pending.paymentMethod) setMethod(pending.paymentMethod);
+    setOrder(normalized);
+    if (normalized.paymentMethod) setMethod(normalized.paymentMethod);
   }, [router]);
 
   if (!order) return <Container className="min-h-[60vh] py-16" />;
 
   const totalDue = order.totalUnico + order.totalMensual;
-  const canConfirm = Boolean(method) && paid && accepted && !confirmed;
+  const canConfirm = Boolean(method) && paid && accepted && !confirmed && !confirming;
 
   function handleCopy(field: CopyField, value: string) {
     navigator.clipboard
@@ -96,91 +104,42 @@ export function PaymentView() {
     setPaid(false);
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!order || !method || !canConfirm) return;
+    setConfirming(true);
 
-    const finalOrder: PendingOrder = {
+    const finalOrder: PendingOrder = reconcilePendingOrder({
       ...order,
       paymentMethod: method,
       confirmedAt: new Date().toISOString(),
-    };
+    });
     savePendingOrder(finalOrder);
 
-    // Registro del pedido en Supabase para el panel de administrador (y en
-    // "Mi cuenta" si el cliente tiene sesión). No bloquea el checkout si falla.
-    saveOrderToDatabase(finalOrder, user?.id ?? null).catch(() => {
-      // sin conexión: el pedido sigue llegando por WhatsApp y correo
-    });
+    const message = buildOrderWhatsAppMessage(finalOrder, method);
+    const href = buildWhatsAppLink(siteConfig.whatsapp.phoneDigitsOnly, message);
 
-    // Aviso por correo a la agencia; no bloquea el checkout si falla.
-    fetch("/api/notify-order", {
+    // Aviso por correo con keepalive para sobrevivir navegación o cambio de app en móvil.
+    const notifyPromise = fetch("/api/notify-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(finalOrder),
-    }).catch(() => {
-      // sin conexión o error de red: el pedido sigue confirmándose por WhatsApp
-    });
+      keepalive: true,
+    }).catch(() => {});
 
-    const itemsList = order.items
-      .map(
-        (item) =>
-          `• ${item.packageName} (${item.serviceName}) — ${formatCurrency(item.price)}${
-            item.billing === "mensual" ? "/mes" : ""
-          }`
-      )
-      .join("\n");
+    // Guardamos el pedido en Supabase con límite de 2.5s para no bloquear en mala señal.
+    const savePromise = saveOrderToDatabase(finalOrder, user?.id ?? null).catch(() => {});
 
-    const briefLines: string[] = [];
-    if (order.briefs) {
-      const seenServices = new Map<string, string>();
-      for (const item of order.items) {
-        if (!seenServices.has(item.serviceSlug)) {
-          seenServices.set(item.serviceSlug, item.serviceName);
-        }
-      }
-      for (const [slug, serviceName] of seenServices) {
-        const serviceAnswers = order.briefs[slug];
-        const questions = briefQuestions[slug];
-        if (!serviceAnswers || !questions) continue;
-
-        briefLines.push(" ", `*Briefing — ${serviceName}*`);
-        for (const question of questions) {
-          const answer = serviceAnswers[question.id];
-          if (!answer || (Array.isArray(answer) && answer.length === 0)) continue;
-          const text = Array.isArray(answer) ? answer.join(", ") : answer;
-          briefLines.push(`${question.label}: ${text}`);
-        }
-      }
-    }
-
-    const message = [
-      `Hola Pixolve Agency 👋, quiero confirmar mi pedido *${order.orderId}*.`,
-      " ",
-      itemsList,
-      " ",
-      `Total: ${formatCurrency(totalDue)}${
-        order.totalMensual > 0 ? " (incluye primer mes de servicio(s) recurrente(s))" : ""
-      }`,
-      `Método de pago elegido: ${method === "paypal" ? "PayPal" : "USDT (Binance Pay)"}`,
-      " ",
-      `Nombre: ${order.customer.fullName}`,
-      `Correo: ${order.customer.email}`,
-      `Teléfono: ${order.customer.phone}`,
-      order.customer.company ? `Empresa: ${order.customer.company}` : "",
-      `País: ${order.customer.country}`,
-      order.customer.notes ? `Notas: ${order.customer.notes}` : "",
-      ...briefLines,
-      " ",
-      "Adjunto mi comprobante de pago a continuación.",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const href = buildWhatsAppLink(siteConfig.whatsapp.phoneDigitsOnly, message);
+    // Abrimos WhatsApp dentro del gesto del usuario (evita bloqueo en Safari iOS).
     window.open(href, "_blank", "noopener,noreferrer");
+
+    await Promise.race([
+      Promise.allSettled([savePromise, notifyPromise]),
+      new Promise((resolve) => window.setTimeout(resolve, 2500)),
+    ]);
+
     clearCart();
     setConfirmed(true);
-    router.push(`/pedido-confirmado?order=${encodeURIComponent(order.orderId)}`);
+    router.push(`/pedido-confirmado?order=${encodeURIComponent(finalOrder.orderId)}`);
   }
 
   const helpHref = buildWhatsAppLink(
@@ -368,7 +327,7 @@ export function PaymentView() {
                 icon={<MessageCircle className="h-5 w-5" />}
                 disabled={!canConfirm}
               >
-                Confirmar pedido y enviar comprobante
+                {confirming ? "Registrando pedido..." : "Confirmar pedido y enviar comprobante"}
               </Button>
               <p className="mt-3 text-center text-xs text-muted">
                 Se abrirá WhatsApp con el resumen de tu pedido para que adjuntes el comprobante.
@@ -410,16 +369,16 @@ function CopyBox({
   onCopy: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-ink-800/60 p-4">
-      <div className="min-w-0">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-ink-800/60 p-4">
+      <div className="min-w-0 flex-1">
         <p className="text-xs text-muted">{label}</p>
-        <p className="mt-0.5 break-all font-mono text-[15px] font-semibold text-heading">{value}</p>
+        <p className="mt-0.5 break-all font-mono text-sm font-semibold text-heading sm:text-[15px]">{value}</p>
       </div>
       <button
         type="button"
         onClick={onCopy}
         className={cn(
-          "flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all",
+          "flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all active:scale-95",
           copied ? "bg-emerald-500/15 text-emerald-400" : "bg-white/5 text-body-strong hover:bg-brand-500 hover:text-ink-950"
         )}
         aria-label={`Copiar ${label}`}

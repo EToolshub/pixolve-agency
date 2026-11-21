@@ -6,10 +6,11 @@ import { siteConfig } from "@/data/site";
 
 export function GoogleReviewsBanner() {
   return (
-    <section className="py-8">
+    <section className="cv-auto py-6 sm:py-8">
       <Container>
-        <div className="flex flex-col items-center justify-between gap-6 rounded-3xl border border-default bg-card p-6 text-center sm:flex-row sm:p-8 sm:text-left">
-          <div className="flex flex-col items-center gap-4 sm:flex-row">
+        <div className="relative flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl border border-default bg-card p-6 text-center sm:flex-row sm:p-8 sm:text-left">
+          <div aria-hidden className="pointer-events-none absolute -left-24 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="relative flex flex-col items-center gap-4 sm:flex-row">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-lg">
               <GoogleIcon className="h-7 w-7" />
             </div>
@@ -23,13 +24,15 @@ export function GoogleReviewsBanner() {
                 </span>
               </p>
               <p className="mt-1 text-sm text-body">
-                Mira nuestro perfil y las reseñas de clientes anteriores.
+                Mira nuestro perfil verificado y las reseñas de clientes que ya trabajaron con nosotros.
               </p>
             </div>
           </div>
           <Button
             href={siteConfig.googleBusinessUrl}
             variant="secondary"
+            fullWidth
+            className="relative sm:w-auto"
             icon={<ArrowUpRight className="h-4 w-4" />}
             iconPosition="right"
           >

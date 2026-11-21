@@ -81,10 +81,10 @@ export function CartView() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: -30, transition: { duration: 0.2 } }}
-                        className="flex items-center gap-4 rounded-3xl border border-default bg-card p-5 sm:p-6"
+                        className="flex items-center gap-3.5 rounded-3xl border border-default bg-card p-4 sm:gap-4 sm:p-6"
                       >
-                        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-400 ring-1 ring-brand-500/20">
-                          {Icon && <Icon className="h-6 w-6" />}
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-400 ring-1 ring-brand-500/20 sm:h-14 sm:w-14">
+                          {Icon && <Icon className="h-5 w-5 sm:h-6 sm:w-6" />}
                         </span>
                         <div className="min-w-0 flex-1">
                           <Link
@@ -93,9 +93,13 @@ export function CartView() {
                           >
                             {item.serviceName}
                           </Link>
-                          <p className="mt-0.5 truncate text-lg font-bold text-heading">{item.packageName}</p>
-                          <p className="text-sm text-muted">
+                          <p className="mt-0.5 truncate text-base font-bold text-heading sm:text-lg">{item.packageName}</p>
+                          <p className="mt-0.5 text-xs text-muted sm:text-sm">
                             {item.billing === "mensual" ? "Suscripción mensual" : "Pago único"}
+                          </p>
+                          <p className="mt-1.5 font-display text-lg font-bold text-heading sm:hidden">
+                            {formatCurrency(item.price)}
+                            {item.billing === "mensual" && <span className="text-xs font-medium text-muted">/mes</span>}
                           </p>
                         </div>
                         <p className="hidden font-display text-xl font-bold text-heading sm:block">

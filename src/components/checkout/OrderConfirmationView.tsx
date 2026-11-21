@@ -17,7 +17,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { LogoMark } from "@/components/brand/Logo";
 import { formatCurrency, buildWhatsAppLink } from "@/lib/utils";
-import { getPendingOrder, type PendingOrder } from "@/lib/order-storage";
+import { buildOrderWhatsAppMessage, getPendingOrder, type PendingOrder } from "@/lib/order-storage";
 import { siteConfig } from "@/data/site";
 
 const nextSteps = [
@@ -56,7 +56,9 @@ export function OrderConfirmationView() {
 
   const whatsappHref = buildWhatsAppLink(
     siteConfig.whatsapp.phoneDigitsOnly,
-    `Hola Pixolve Agency 👋, tengo una duda sobre mi pedido ${orderId ?? ""}.`
+    order
+      ? buildOrderWhatsAppMessage(order)
+      : `Hola Pixolve Agency 👋, quiero enviar el comprobante de pago de mi pedido ${orderId ?? ""}.`
   );
 
   function copyOrderId() {

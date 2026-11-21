@@ -354,6 +354,18 @@ select option {
 .spotlight:focus-within::after {
   opacity: 1;
 }
+@media (hover: none) {
+  .spotlight::before,
+  .spotlight::after {
+    display: none;
+  }
+}
+
+/* Secciones debajo del pliegue: acelera el render inicial en móviles */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 640px;
+}
 
 /* Texto con contorno para la franja de marquee */
 .text-outline {

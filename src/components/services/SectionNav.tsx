@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /** Navegación interna fija de la página de servicio; resalta la sección visible. */
 export function SectionNav({ sections }: { sections: { id: string; label: string }[] }) {
   const [active, setActive] = useState(sections[0]?.id);
+  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -25,18 +26,30 @@ export function SectionNav({ sections }: { sections: { id: string; label: string
     return () => observer.disconnect();
   }, [sections]);
 
+  useEffect(() => {
+    if (!active) return;
+    linkRefs.current[active]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [active]);
+
   return (
     <div className="no-print sticky top-[5.25rem] z-30 flex justify-center px-3">
       <nav
         aria-label="Secciones del servicio"
-        className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/10 bg-ink-900/85 p-1 shadow-xl backdrop-blur-xl [scrollbar-width:none]"
+        className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/10 bg-ink-900/90 p-1 shadow-xl backdrop-blur-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {sections.map((section) => (
           <a
             key={section.id}
+            ref={(el) => {
+              linkRefs.current[section.id] = el;
+            }}
             href={`#${section.id}`}
             className={cn(
-              "relative whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
+              "relative whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition-colors sm:px-4 sm:py-2.5 sm:text-sm sm:font-medium",
               active === section.id ? "text-ink-950" : "text-body hover:text-white"
             )}
           >

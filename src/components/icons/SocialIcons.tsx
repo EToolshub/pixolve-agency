@@ -29,3 +29,14 @@ export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function BehanceIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 7h4.8a2.4 2.4 0 0 1 0 4.8H3V7Z" />
+      <path d="M3 11.8h5.3a2.6 2.6 0 0 1 0 5.2H3v-5.2Z" />
+      <path d="M14.5 9h5" />
+      <path d="M13.5 14h7a3.5 3.5 0 1 0-.9 2.4" />
+    </svg>
+  );
+}

@@ -108,7 +108,23 @@ export function OrderSummary({
               exit={{ height: 0 }}
               className="overflow-hidden lg:hidden"
             >
-              <div className="border-t border-default px-6 py-5">{details}</div>
+              <div className="border-t border-default px-6 py-5">
+                {orderId && (
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <span className="text-xs text-muted">Pedido</span>
+                    <button
+                      type="button"
+                      onClick={copyOrderId}
+                      className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 font-mono text-xs text-body-strong ring-1 ring-white/10 transition-colors hover:text-white"
+                      aria-label={`Copiar número de pedido ${orderId}`}
+                    >
+                      {orderId}
+                      {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                    </button>
+                  </div>
+                )}
+                {details}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -148,8 +164,13 @@ export function OrderSummary({
         </div>
       </div>
 
-      <div className="mt-5 hidden rounded-3xl border border-default p-6 lg:block">
-        <TrustList />
+      <div className="mt-4 rounded-3xl border border-default p-5 lg:mt-5 lg:p-6">
+        <div className="lg:hidden">
+          <TrustList compact />
+        </div>
+        <div className="hidden lg:block">
+          <TrustList />
+        </div>
       </div>
     </aside>
   );

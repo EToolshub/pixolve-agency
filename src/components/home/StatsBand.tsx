@@ -20,13 +20,13 @@ export function StatsBand() {
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className={`relative p-7 sm:p-9 ${index % 2 === 0 ? "border-r border-default" : ""} ${index < 2 ? "border-b border-default lg:border-b-0" : ""} ${index === 1 ? "lg:border-r" : ""}`}
+              className={`relative p-5 sm:p-8 lg:p-9 ${index % 2 === 0 ? "border-r border-default" : ""} ${index < 2 ? "border-b border-default lg:border-b-0" : ""} ${index === 1 ? "lg:border-r" : ""}`}
             >
-              <p className="font-display text-4xl font-extrabold text-heading sm:text-5xl">
+              <p className="font-display text-3xl font-extrabold text-heading sm:text-5xl">
                 <CountUp to={stat.value} suffix={stat.suffix} />
               </p>
-              <p className="mt-2 text-sm text-body">{stat.label}</p>
-              <span className="absolute left-7 top-0 h-0.5 w-10 bg-brand-500 sm:left-9" />
+              <p className="mt-2 text-xs leading-snug text-body sm:text-sm">{stat.label}</p>
+              <span className="absolute left-5 top-0 h-0.5 w-9 bg-brand-500 sm:left-8 sm:w-10 lg:left-9" />
             </div>
           ))}
         </div>

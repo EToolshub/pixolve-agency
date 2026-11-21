@@ -6,15 +6,16 @@ export const metadata: Metadata = {
   title: "Política de reembolsos",
   description:
     "Condiciones de cancelación y reembolso de los servicios de Pixolve Agency.",
+  alternates: { canonical: "/reembolsos" },
 };
 
 export default function ReembolsosPage() {
   return (
-    <LegalLayout title="Política de reembolsos" updatedAt="Septiembre de 2026">
+    <LegalLayout title="Política de reembolsos" updatedAt="Noviembre de 2026">
       <p>
-        Queremos que tomes una decisión informada antes de comprar. Esta es
-        nuestra política general de reembolsos; ajústala según tus propias
-        condiciones comerciales.
+        Queremos que contrates con total tranquilidad. A continuación detallamos
+        las condiciones claras de cancelación y reembolso que aplican a todos
+        los proyectos y suscripciones de {siteConfig.legalName}.
       </p>
 
       <h2>1. Antes de iniciar el proyecto</h2>

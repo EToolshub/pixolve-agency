@@ -5,6 +5,7 @@ import { Logo, LogoMark } from "@/components/brand/Logo";
 import { footerLegalLinks, navLinks, siteConfig } from "@/data/site";
 import { services } from "@/data/services";
 import {
+  BehanceIcon,
   FacebookIcon,
   InstagramIcon,
   LinkedinIcon,
@@ -13,9 +14,10 @@ import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
 
 const socialLinks = [
   { href: siteConfig.social.instagram, label: "Instagram", Icon: InstagramIcon },
+  { href: siteConfig.social.behance, label: "Behance", Icon: BehanceIcon },
   { href: siteConfig.social.facebook, label: "Facebook", Icon: FacebookIcon },
   { href: siteConfig.social.linkedin, label: "LinkedIn", Icon: LinkedinIcon },
-];
+].filter((item) => Boolean(item.href));
 
 export function Footer() {
   const year = new Date().getFullYear();

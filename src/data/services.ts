@@ -187,7 +187,6 @@ export const services: Service[] = [
           "Reportes semanales",
           "Estratega de cuenta dedicado",
         ],
-        deliveryTime: "Cotización personalizada según alcance",
       },
     ],
     faqs: [

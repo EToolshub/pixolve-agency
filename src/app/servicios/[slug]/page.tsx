@@ -136,8 +136,8 @@ export default async function ServiceDetailPage({ params }: Props) {
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-body">{service.description}</p>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Button href="#paquetes" size="lg" icon={<ArrowDown className="h-5 w-5" />} iconPosition="right">
+              <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row">
+                <Button href="#paquetes" size="lg" fullWidth className="sm:w-auto" icon={<ArrowDown className="h-5 w-5" />} iconPosition="right">
                   Ver paquetes desde {formatCurrency(starting.price)}
                   {starting.billing === "mensual" ? "/mes" : ""}
                 </Button>
@@ -145,6 +145,8 @@ export default async function ServiceDetailPage({ params }: Props) {
                   href={whatsappHref}
                   variant="secondary"
                   size="lg"
+                  fullWidth
+                  className="sm:w-auto"
                   icon={<MessageCircle className="h-5 w-5 text-whatsapp" />}
                 >
                   Cotizar a medida
@@ -193,7 +195,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       <SectionNav sections={sections} />
 
       {/* PAQUETES */}
-      <section id="paquetes" className="scroll-mt-40 py-20 sm:py-28">
+      <section id="paquetes" className="scroll-mt-40 py-14 sm:py-24">
         <Container>
           <SectionHeading
             eyebrow="Paquetes y precios"
@@ -232,7 +234,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       </section>
 
       {/* QUÉ INCLUYE */}
-      <section id="incluye" className="scroll-mt-40 border-y border-default bg-alt py-20 sm:py-28">
+      <section id="incluye" className="cv-auto scroll-mt-40 border-y border-default bg-alt py-14 sm:py-24">
         <Container>
           <SectionHeading
             eyebrow="Qué incluye"
@@ -259,7 +261,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       </section>
 
       {/* PROCESO */}
-      <section id="proceso" className="scroll-mt-40 py-20 sm:py-28">
+      <section id="proceso" className="cv-auto scroll-mt-40 py-14 sm:py-24">
         <Container>
           <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="lg:sticky lg:top-40 lg:self-start">
@@ -298,7 +300,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
       {/* TRABAJOS RELACIONADOS */}
       {relatedWork.length > 0 && (
-        <section id="trabajos" className="scroll-mt-40 border-t border-default py-20 sm:py-28">
+        <section id="trabajos" className="cv-auto scroll-mt-40 border-t border-default py-14 sm:py-24">
           <Container>
             <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
               <SectionHeading
@@ -323,7 +325,7 @@ export default async function ServiceDetailPage({ params }: Props) {
       )}
 
       {/* FAQ */}
-      <section id="faq" className="scroll-mt-40 border-t border-default bg-alt py-20 sm:py-28">
+      <section id="faq" className="cv-auto scroll-mt-40 border-t border-default bg-alt py-14 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionHeading
             align="left"

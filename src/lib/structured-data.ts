@@ -11,14 +11,14 @@ export function organizationSchema() {
     url: siteConfig.url,
     description: siteConfig.description,
     image: `${siteConfig.url}/opengraph-image`,
-    logo: `${siteConfig.url}/opengraph-image`,
+    logo: `${siteConfig.url}/brand/pixolve-logo.png`,
     priceRange: "$$",
     areaServed: [
       { "@type": "Place", name: "Latinoamérica" },
       { "@type": "Place", name: "Estados Unidos" },
     ],
     email: siteConfig.email,
-    sameAs: Object.values(siteConfig.social),
+    sameAs: [...Object.values(siteConfig.social), siteConfig.googleBusinessUrl].filter(Boolean),
     knowsAbout: [
       "Diseño gráfico",
       "Branding",

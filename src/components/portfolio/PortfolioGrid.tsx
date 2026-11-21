@@ -45,7 +45,7 @@ export function PortfolioGrid() {
         })}
       </div>
 
-      <motion.div layout className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+      <motion.div layout className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((item) => (
             <motion.div
@@ -56,7 +56,10 @@ export function PortfolioGrid() {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              <PortfolioCard item={item} />
+              <PortfolioCard
+                item={item}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              />
             </motion.div>
           ))}
         </AnimatePresence>

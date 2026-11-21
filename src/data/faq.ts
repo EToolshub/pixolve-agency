@@ -35,12 +35,12 @@ export const paymentFaqs = [
   {
     question: "¿Cómo pago con USDT?",
     answer:
-      "En el checkout eliges 'USDT (Binance Pay)', copias la dirección de la wallet que te mostramos, envías el monto exacto desde tu app de Binance y confirmas tu pedido por WhatsApp adjuntando el comprobante.",
+      "En el checkout eliges 'USDT · Binance Pay', copias nuestro Binance Pay ID con un clic, envías el monto exacto desde tu app de Binance (Pay → Enviar) y confirmas tu pedido por WhatsApp adjuntando la captura del comprobante.",
   },
   {
     question: "¿Cómo pago con PayPal?",
     answer:
-      "Eliges 'PayPal' en el checkout, haces clic en el botón para pagar el monto exacto de tu pedido y luego confirmas por WhatsApp para que iniciemos tu proyecto de inmediato.",
+      "En el checkout eliges 'PayPal', copias el correo oficial de pago que te mostramos, envías el monto exacto seleccionando 'Pagar por bienes y servicios' (para contar con protección al comprador) y confirmas por WhatsApp adjuntando tu comprobante.",
   },
   {
     question: "¿Cuándo comienza mi proyecto después de pagar?",

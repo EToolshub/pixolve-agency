@@ -43,11 +43,21 @@ export function Header() {
     setServicesOpen(false);
   }, [pathname]);
 
-  // Bloquea el scroll del fondo con el menú móvil abierto.
+  // Bloquea el scroll del fondo y permite cerrar con Escape cuando el menú móvil está abierto.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) {
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
     };
   }, [menuOpen]);
 
@@ -227,11 +237,11 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 bottom-0 top-[5rem] z-40 overflow-y-auto bg-ink-950/98 px-5 pb-10 backdrop-blur-xl lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-[5rem] z-40 overflow-y-auto bg-ink-950/98 px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] backdrop-blur-xl lg:hidden"
           >
             <nav aria-label="Menú móvil" className="mx-auto max-w-lg pt-4">
               <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-subtle">Servicios</p>
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-3 grid grid-cols-2 gap-2.5">
                 {services.map((service, i) => {
                   const Icon = iconMap[service.icon];
                   return (
@@ -243,16 +253,32 @@ export function Header() {
                     >
                       <Link
                         href={`/servicios/${service.slug}`}
-                        className="flex h-full flex-col gap-2 rounded-2xl border border-default bg-card p-3.5"
+                        className="flex h-full flex-col gap-2 rounded-2xl border border-default bg-card p-3.5 transition-colors active:border-brand-500/50"
                       >
                         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500/10 text-brand-400">
                           {Icon && <Icon className="h-4.5 w-4.5" />}
                         </span>
                         <span className="text-sm font-semibold text-heading">{service.shortName}</span>
+                        <span className="text-xs text-muted">Desde {formatCurrency(getStartingPrice(service))}</span>
                       </Link>
                     </motion.div>
                   );
                 })}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.03 * services.length }}
+                >
+                  <Link
+                    href="/servicios"
+                    className="flex h-full flex-col justify-between gap-2 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-3.5 text-brand-300 transition-colors active:bg-brand-500/20"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500 text-ink-950">
+                      <ArrowRight className="h-4.5 w-4.5" />
+                    </span>
+                    <span className="text-sm font-semibold text-heading">Ver todos los servicios</span>
+                  </Link>
+                </motion.div>
               </div>
 
               <ul className="mt-6 divide-y divide-white/5 border-y border-white/5">

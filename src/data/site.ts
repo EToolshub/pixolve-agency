@@ -26,10 +26,11 @@ export const siteConfig = {
 
   social: {
     instagram: "https://instagram.com/pixolve.agency",
-    facebook: "https://facebook.com/pixolveagency", // TODO
-    linkedin: "https://linkedin.com/company/pixolveagency", // TODO
-    tiktok: "https://tiktok.com/@pixolveagency", // TODO
     behance: "https://www.behance.net/GaboDesign1",
+    // Agrega tus URLs cuando actives estas redes; si están vacías no se muestran ni se indexan.
+    facebook: "",
+    linkedin: "",
+    tiktok: "",
   },
 
   googleBusinessUrl: "https://share.google/6R1l1Bh6T5S8ffS4K",

@@ -6,15 +6,17 @@ export const metadata: Metadata = {
   title: "Términos y condiciones",
   description:
     "Términos y condiciones de uso y compra de los servicios de Pixolve Agency.",
+  alternates: { canonical: "/terminos" },
 };
 
 export default function TerminosPage() {
   return (
-    <LegalLayout title="Términos y condiciones" updatedAt="Septiembre de 2026">
+    <LegalLayout title="Términos y condiciones" updatedAt="Noviembre de 2026">
       <p>
-        Este documento es una plantilla de referencia y no sustituye la
-        asesoría de un profesional legal. Te recomendamos revisarlo con un
-        abogado antes de operar comercialmente.
+        Estos Términos y Condiciones regulan el acceso, uso y contratación de
+        servicios digitales ofrecidos por {siteConfig.legalName} a través de
+        nuestro sitio web. Te invitamos a leerlos con atención antes de realizar
+        tu pedido.
       </p>
 
       <h2>1. Aceptación de los términos</h2>

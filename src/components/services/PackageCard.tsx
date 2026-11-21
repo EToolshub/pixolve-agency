@@ -14,17 +14,19 @@ export function PackageCard({
   serviceName: string;
 }) {
   return (
-    <div className={cn("relative h-full", pkg.highlighted && "lg:-my-4")}>
+    <div className={cn("relative h-full", pkg.highlighted && "mt-3 md:mt-0 lg:-my-4")}>
       {pkg.highlighted && (
         <div
           aria-hidden
-          className="absolute -inset-px rounded-[1.6rem] bg-gradient-to-b from-brand-400 via-brand-500/40 to-brand-500/5"
+          className="absolute -inset-px rounded-[1.6rem] bg-gradient-to-b from-brand-400 via-brand-500/45 to-brand-500/10"
         />
       )}
       <SpotlightCard
         className={cn(
-          "relative flex h-full flex-col p-7 sm:p-8",
-          pkg.highlighted ? "rounded-[1.55rem] border-transparent bg-ink-900" : "hover:-translate-y-1"
+          "relative flex h-full flex-col p-6 sm:p-8",
+          pkg.highlighted
+            ? "rounded-[1.55rem] border-transparent bg-gradient-to-b from-brand-500/[0.08] via-ink-900 to-ink-900"
+            : "hover:-translate-y-1"
         )}
       >
         {pkg.highlighted && (

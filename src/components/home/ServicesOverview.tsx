@@ -9,7 +9,7 @@ const spans = ["lg:col-span-3", "lg:col-span-3", "lg:col-span-2", "lg:col-span-2
 
 export function ServicesOverview() {
   return (
-    <section className="py-24 sm:py-32">
+    <section className="py-16 sm:py-24 lg:py-28">
       <Container>
         <SectionHeading
           eyebrow="Nuestros servicios"
@@ -18,7 +18,7 @@ export function ServicesOverview() {
           description="Elige el servicio, agrégalo al carrito y completa tu compra en minutos. Sin llamadas eternas ni cotizaciones ambiguas."
         />
 
-        <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5 lg:mt-16 lg:grid-cols-6">
           {services.map((service, index) => (
             <FadeIn
               key={service.slug}

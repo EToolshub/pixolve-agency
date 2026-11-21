@@ -35,11 +35,11 @@ export function WordRotator({
         <motion.span
           key={words[index]}
           aria-hidden
-          initial={{ y: "70%", opacity: 0, filter: "blur(8px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-70%", opacity: 0, filter: "blur(8px)" }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className={`col-start-1 row-start-1 ${className ?? ""}`}
+          initial={{ y: "55%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "-55%", opacity: 0 }}
+          transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+          className={`col-start-1 row-start-1 will-change-transform ${className ?? ""}`}
         >
           {words[index]}
         </motion.span>
