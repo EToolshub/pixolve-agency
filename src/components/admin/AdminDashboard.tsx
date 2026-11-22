@@ -455,7 +455,7 @@ function OrderCard({
                     WhatsApp
                   </Button>
                 )}
-                <Button href={`mailto:${order.customer_email}?subject=${encodeURIComponent(`Tu pedido ${order.order_code} — Pixolve Agency`)}`} size="sm" variant="secondary" icon={<Mail className="h-4 w-4" />}>
+                <Button href={`mailto:${encodeURIComponent(order.customer_email)}?subject=${encodeURIComponent(`Tu pedido ${order.order_code} — Pixolve Agency`)}`} size="sm" variant="secondary" icon={<Mail className="h-4 w-4" />}>
                   Correo
                 </Button>
               </div>
