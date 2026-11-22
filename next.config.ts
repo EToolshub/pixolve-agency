@@ -2,13 +2,16 @@ import type { NextConfig } from "next";
 
 const SUPABASE_HOST = "gqjptrcvkbzotzserdop.supabase.co";
 
+const GOOGLE_ANALYTICS =
+  "https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://mir-s3-cdn-cf.behance.net https://*.google-analytics.com https://*.googletagmanager.com",
+  `img-src 'self' data: blob: https://mir-s3-cdn-cf.behance.net ${GOOGLE_ANALYTICS}`,
   "font-src 'self' data:",
-  `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://vercel.live`,
+  `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} ${GOOGLE_ANALYTICS} https://vercel.live`,
   "frame-src https://vercel.live",
   "frame-ancestors 'none'",
   "base-uri 'self'",
