@@ -5,9 +5,14 @@ const SUPABASE_HOST = "gqjptrcvkbzotzserdop.supabase.co";
 const GOOGLE_ANALYTICS =
   "https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com";
 
+// En desarrollo React usa eval() para reconstruir las pilas de errores del
+// servidor en el navegador. En producción ni React ni Next lo usan, así que
+// 'unsafe-eval' solo se permite con `next dev` (guía de CSP de Next 16).
+const isDev = process.env.NODE_ENV === "development";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://vercel.live`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://mir-s3-cdn-cf.behance.net ${GOOGLE_ANALYTICS}`,
   "font-src 'self' data:",
