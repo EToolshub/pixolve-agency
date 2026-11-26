@@ -6,7 +6,11 @@ export type PortfolioItem = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────
-// Portafolio. Behance no ofrece una API/RSS pública para sincronizar esto
+// Piezas de Behance. Desde nov-2026 el inicio y /portafolio muestran los
+// casos reales de data/cases.ts; esta lista solo se usa en las páginas de
+// servicio que todavía no tienen un caso propio (hoy: Diseño Gráfico).
+//
+// Behance no ofrece una API/RSS pública para sincronizar esto
 // automáticamente, así que esta lista se actualiza a mano — pero es rápido:
 // para agregar un proyecto nuevo, copia de su página en Behance:
 //   1. El título
@@ -14,8 +18,7 @@ export type PortfolioItem = {
 //   3. El enlace de la página del proyecto (behanceUrl)
 //   4. La URL de la imagen de portada (click derecho → copiar dirección
 //      de imagen sobre la miniatura del proyecto)
-// y agrégalo como un nuevo objeto al inicio del arreglo. Al hacer commit y
-// push, aparece automáticamente en /portafolio y en la home.
+// y agrégalo como un nuevo objeto al inicio del arreglo.
 // ─────────────────────────────────────────────────────────────────────────
 
 export const portfolioItems: PortfolioItem[] = [

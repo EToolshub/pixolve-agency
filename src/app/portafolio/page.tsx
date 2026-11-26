@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { ExternalLink } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { Button } from "@/components/ui/Button";
-import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { BehanceLink, CaseStudyList } from "@/components/cases/CaseStudies";
 import { CTASection } from "@/components/home/CTASection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/structured-data";
+import { caseStudies } from "@/data/cases";
 import { siteConfig } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Portafolio | Branding, UI/UX y Redes Sociales",
+  title: "Portafolio | Casos reales de páginas web y redes sociales",
   description:
-    "Explora nuestro portafolio de proyectos reales de diseño gráfico, branding, UI/UX y contenido para redes sociales, con enlace directo a cada estudio de caso en Behance.",
+    "Casos reales de Pixolve Agency: la web de Signum Media, la tienda de pedidos de Una Vainita y los Shorts diarios de Monitor BTC. Proyectos en vivo que puedes visitar.",
   alternates: { canonical: "/portafolio" },
 };
 
@@ -22,28 +23,42 @@ export default function PortafolioPage() {
     { name: "Portafolio", url: `${siteConfig.url}/portafolio` },
   ]);
 
+  const works = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Casos reales de Pixolve Agency",
+    itemListElement: caseStudies.map((c, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: `${c.client}: ${c.title}`,
+        description: c.challenge,
+        url: c.link.href,
+        creator: { "@id": `${siteConfig.url}/#organization` },
+      },
+    })),
+  };
+
   return (
     <>
       <JsonLd data={breadcrumb} />
+      <JsonLd data={works} />
       <PageHero
         eyebrow="Portafolio"
-        title="Proyectos que hemos"
-        highlight="diseñado y desarrollado"
-        description="Cada proyecto está publicado en nuestro perfil de Behance con el estudio de caso completo. Haz clic en cualquier pieza para verlo a detalle."
+        title="Casos reales"
+        highlight="que ya están funcionando"
+        description="Webs publicadas y contenido que sale cada día. Cada caso tiene su enlace para que lo veas tú mismo."
       >
-        <Button
-          href={siteConfig.social.behance}
-          variant="secondary"
-          icon={<ExternalLink className="h-4 w-4" />}
-          iconPosition="right"
-        >
-          Ver perfil completo en Behance
+        <Button href="#casos" icon={<ArrowDown className="h-4 w-4" />} iconPosition="right">
+          Ver los casos
         </Button>
       </PageHero>
 
-      <section className="py-16 sm:py-20">
+      <section id="casos" className="scroll-mt-24 py-16 sm:py-20">
         <Container>
-          <PortfolioGrid />
+          <CaseStudyList items={caseStudies} />
+          <BehanceLink className="mt-20" />
         </Container>
       </section>
 

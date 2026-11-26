@@ -39,6 +39,8 @@ export type Service = {
   idealFor: string[];
   /** Categoría del portafolio relacionada, para mostrar trabajos reales. */
   portfolioCategory?: "Branding" | "UI/UX" | "Redes Sociales";
+  /** Casos reales (slugs de data/cases.ts). Si hay, se muestran en vez de las piezas de Behance. */
+  caseSlugs?: string[];
   packages: ServicePackage[];
   faqs: { question: string; answer: string }[];
   seo: {

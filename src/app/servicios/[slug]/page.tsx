@@ -30,6 +30,8 @@ import { iconMap } from "@/lib/icon-map";
 import { buildWhatsAppLink, formatCurrency } from "@/lib/utils";
 import { getServiceBySlug, getStartingPackage, services } from "@/data/services";
 import { portfolioItems } from "@/data/portfolio";
+import { getCaseStudies } from "@/data/cases";
+import { BehanceLink, CaseStudyList } from "@/components/cases/CaseStudies";
 import { paymentFaqs } from "@/data/faq";
 import { siteConfig } from "@/data/site";
 
@@ -76,9 +78,12 @@ export default async function ServiceDetailPage({ params }: Props) {
   const Icon = iconMap[service.icon];
   const starting = getStartingPackage(service);
   const otherServices = services.filter((s) => s.slug !== service.slug);
-  const relatedWork = service.portfolioCategory
-    ? portfolioItems.filter((item) => item.category === service.portfolioCategory).slice(0, 3)
-    : [];
+  // Casos reales primero; si el servicio aún no tiene, se muestran piezas de Behance.
+  const relatedCases = getCaseStudies(service.caseSlugs ?? []);
+  const relatedWork =
+    relatedCases.length === 0 && service.portfolioCategory
+      ? portfolioItems.filter((item) => item.category === service.portfolioCategory).slice(0, 3)
+      : [];
   const faqs = [...service.faqs, ...paymentFaqs.slice(0, 2)];
   const whatsappHref = buildWhatsAppLink(
     siteConfig.whatsapp.phoneDigitsOnly,
@@ -89,7 +94,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     { id: "paquetes", label: "Paquetes" },
     { id: "incluye", label: "Qué incluye" },
     { id: "proceso", label: "Proceso" },
-    ...(relatedWork.length > 0 ? [{ id: "trabajos", label: "Trabajos" }] : []),
+    ...(relatedCases.length > 0 || relatedWork.length > 0 ? [{ id: "trabajos", label: "Trabajos" }] : []),
     { id: "faq", label: "Preguntas" },
   ];
 
@@ -298,7 +303,25 @@ export default async function ServiceDetailPage({ params }: Props) {
         </Container>
       </section>
 
-      {/* TRABAJOS RELACIONADOS */}
+      {/* CASOS REALES */}
+      {relatedCases.length > 0 && (
+        <section id="trabajos" className="cv-auto scroll-mt-40 border-t border-default py-14 sm:py-24">
+          <Container>
+            <SectionHeading
+              align="left"
+              eyebrow="Portafolio"
+              title="Casos reales de"
+              highlight={service.shortName}
+            />
+            <div className="mt-12 sm:mt-16">
+              <CaseStudyList items={relatedCases} />
+            </div>
+            <BehanceLink className="mt-16" />
+          </Container>
+        </section>
+      )}
+
+      {/* TRABAJOS RELACIONADOS (Behance, solo si el servicio no tiene casos propios) */}
       {relatedWork.length > 0 && (
         <section id="trabajos" className="cv-auto scroll-mt-40 border-t border-default py-14 sm:py-24">
           <Container>

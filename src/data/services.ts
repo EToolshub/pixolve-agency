@@ -118,6 +118,7 @@ export const services: Service[] = [
     category: "Marketing",
     headline: "Redes sociales que construyen comunidad y ventas",
     portfolioCategory: "Redes Sociales",
+    caseSlugs: ["monitor-btc"],
     shortDescription:
       "Gestión de contenido y comunidad para pymes y grandes empresas.",
     description:
@@ -215,6 +216,7 @@ export const services: Service[] = [
     category: "Diseño",
     headline: "Interfaces que se entienden sin instrucciones",
     portfolioCategory: "UI/UX",
+    caseSlugs: ["una-vainita", "signum-media"],
     shortDescription: "Interfaces claras y experiencias que convierten.",
     description:
       "Diseñamos productos digitales centrados en el usuario: research, wireframes, prototipos interactivos y una interfaz final pulida y lista para desarrollo.",
@@ -308,6 +310,7 @@ export const services: Service[] = [
     category: "Desarrollo",
     headline: "Sitios web rápidos, seguros y hechos para vender",
     portfolioCategory: "UI/UX",
+    caseSlugs: ["signum-media", "una-vainita"],
     shortDescription: "Sitios y tiendas online rápidas, seguras y a tu medida.",
     description:
       "Construimos sitios web y tiendas en línea modernas, optimizadas para conversión y velocidad, desde un sitio informativo hasta una plataforma e-commerce a medida.",
