@@ -60,7 +60,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Una Vainita",
     sector: "Comida criolla congelada · Caracas",
     service: "Páginas Web",
-    status: "En vivo",
+    status: "En vivo en unavainita.com.ve",
     title: "Un menú que arma el pedido y lo envía por WhatsApp",
     challenge:
       "Una Vainita vende platos criollos congelados. Su menú vivía en un Drive enlazado desde Instagram, y necesitaba una web donde el cliente viera los platos y armara su pedido.",
@@ -71,10 +71,10 @@ export const caseStudies: CaseStudy[] = [
       "Identidad de la marca llevada a toda la web, en computadora y celular.",
     ],
     tags: ["Landing de ventas", "Pedidos por WhatsApp", "Ilustración", "Responsive"],
-    link: { href: "https://etoolshub.github.io/unavainita/", label: "Ver sitio en vivo" },
+    link: { href: "https://unavainita.com.ve/", label: "Ver sitio en vivo" },
     media: {
       kind: "web",
-      domain: "etoolshub.github.io/unavainita",
+      domain: "unavainita.com.ve",
       desktop: { src: "/casos/unavainita-portada.webp", alt: "Portada de la web de Una Vainita con una hallaca ilustrada" },
       mobile: { src: "/casos/unavainita-movil.webp", alt: "Web de Una Vainita vista en un celular" },
       extra: { src: "/casos/unavainita-menu.webp", alt: "Menú de combos y carrito de pedido de la web de Una Vainita" },
